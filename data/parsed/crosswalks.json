@@ -1,0 +1,986 @@
+{
+  "source": "Sentinel crosswalk mappings",
+  "crosswalks": [
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Gov",
+      "target_name": "Governance, Policies, and Procedures",
+      "relationship": "maps_to",
+      "notes": "Both require organizational policies governing model/AI risk; SR 11-7 mandates board-approved MRM policy"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.2",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Gov",
+      "target_name": "Governance, Policies, and Procedures",
+      "relationship": "partially_maps",
+      "notes": "SR 11-7 addresses soundness and fitness-for-purpose; NIST broadens to full trustworthiness characteristics"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.3",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Gov",
+      "target_name": "Governance, Policies, and Procedures",
+      "relationship": "maps_to",
+      "notes": "Both require risk tolerance thresholds that drive the depth of risk management activities"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.4",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Doc",
+      "target_name": "Documentation",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 documentation requirements for model risk decisions align with transparent risk management controls"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.5",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Aud",
+      "target_name": "Audit and Internal Controls",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 requires periodic model review and internal audit; NIST requires ongoing monitoring and periodic review"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.6",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Inv",
+      "target_name": "Model Inventory",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 requires a comprehensive model inventory; NIST requires mechanisms to inventory AI systems"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.7",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Use",
+      "target_name": "Model Use / Outcomes Analysis",
+      "relationship": "partially_maps",
+      "notes": "SR 11-7 addresses model retirement; NIST extends to safe decommissioning without increasing risk"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 2.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.RR",
+      "target_name": "Roles and Responsibilities",
+      "relationship": "maps_to",
+      "notes": "Both require clearly defined roles, responsibilities, and reporting lines for model/AI risk management"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 2.2",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.RR",
+      "target_name": "Roles and Responsibilities",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 requires qualified staff; NIST requires training to enable AI risk management duties"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 2.3",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Esc",
+      "target_name": "Escalation and Reporting",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 requires board/senior management oversight; NIST requires executive responsibility for AI risk decisions"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 4.3",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Esc",
+      "target_name": "Escalation and Reporting",
+      "relationship": "partially_maps",
+      "notes": "Both require incident identification and information sharing; SR 11-7 focuses on model failures and escalation paths"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 6.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Ven",
+      "target_name": "Vendor Model Management",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 addresses vendor/third-party model risk; NIST addresses third-party AI risks including IP"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 6.2",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Ven",
+      "target_name": "Vendor Model Management",
+      "relationship": "maps_to",
+      "notes": "Both require contingency plans for third-party model/data failures"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 1.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Val",
+      "target_name": "Model Validation",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 validation requires metrics and benchmarks; NIST requires selected approaches and metrics for risk measurement"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 1.2",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Val",
+      "target_name": "Model Validation",
+      "relationship": "maps_to",
+      "notes": "Both require regular reassessment of metrics and controls effectiveness"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 1.3",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Val",
+      "target_name": "Model Validation",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 requires independent validation; NIST requires independent assessors separate from developers"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Doc",
+      "target_name": "Documentation",
+      "relationship": "maps_to",
+      "notes": "Both require documentation of testing methodologies, datasets, metrics, and tools"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.3",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Val",
+      "target_name": "Model Validation",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 requires performance testing representative of production; NIST requires performance measurement in deployment-like conditions"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.4",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Use",
+      "target_name": "Model Use / Outcomes Analysis",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 outcomes analysis requires ongoing monitoring; NIST requires production monitoring of functionality and behavior"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.5",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Dev",
+      "target_name": "Model Development",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 model development requires sound methodology and documented limitations; NIST requires validity, reliability, and documented limitations"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.9",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Doc",
+      "target_name": "Documentation",
+      "relationship": "partially_maps",
+      "notes": "SR 11-7 requires model documentation including assumptions and limitations; NIST requires explainability and contextual interpretation"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 3.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Use",
+      "target_name": "Model Use / Outcomes Analysis",
+      "relationship": "maps_to",
+      "notes": "Both require ongoing tracking of risks and performance in deployed/production contexts"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 1.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Dev",
+      "target_name": "Model Development",
+      "relationship": "partially_maps",
+      "notes": "SR 11-7 requires understanding intended use and context; NIST requires documenting intended purpose and prospective settings"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 4.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Ven",
+      "target_name": "Vendor Model Management",
+      "relationship": "partially_maps",
+      "notes": "Both address risk mapping of third-party components; SR 11-7 focuses on vendor model due diligence"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 1.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Use",
+      "target_name": "Model Use / Outcomes Analysis",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 gates model use on validation results; NIST requires go/no-go determination based on intended purpose"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 2.4",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Use",
+      "target_name": "Model Use / Outcomes Analysis",
+      "relationship": "maps_to",
+      "notes": "SR 11-7 allows for model decommission or restriction; NIST requires mechanisms to disengage or deactivate non-performing AI"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 3.1",
+      "target_framework": "sr11_7",
+      "target_id": "SR11-7.Ven",
+      "target_name": "Vendor Model Management",
+      "relationship": "maps_to",
+      "notes": "Both require ongoing monitoring of third-party model/resource risks with documented controls"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:5.2",
+      "target_name": "AI Policy",
+      "relationship": "maps_to",
+      "notes": "Both require documented AI policies that address legal and regulatory requirements"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.2",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.3",
+      "target_name": "Responsible AI (Annex A)",
+      "relationship": "maps_to",
+      "notes": "ISO responsible AI controls parallel NIST trustworthiness characteristics integrated into organizational processes"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.3",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:6.1",
+      "target_name": "Actions to Address Risks and Opportunities",
+      "relationship": "maps_to",
+      "notes": "Both require risk-based determination of the depth and extent of management activities"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.4",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:7.5",
+      "target_name": "Documented Information",
+      "relationship": "maps_to",
+      "notes": "Both require documented and transparent risk management processes and outcomes"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.5",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:9.3",
+      "target_name": "Management Review",
+      "relationship": "maps_to",
+      "notes": "Both require periodic review of risk management processes with defined roles and frequencies"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.6",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:8.1",
+      "target_name": "Operational Planning and Control",
+      "relationship": "partially_maps",
+      "notes": "ISO operational control includes system inventory as part of planning; NIST explicitly requires AI system inventory"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.7",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.4",
+      "target_name": "AI System Lifecycle (Annex A)",
+      "relationship": "maps_to",
+      "notes": "ISO lifecycle controls include retirement/decommissioning; NIST requires safe decommissioning procedures"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 2.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:5.3",
+      "target_name": "Roles, Responsibilities and Authorities",
+      "relationship": "maps_to",
+      "notes": "Both require clearly defined and documented roles and communication lines for AI risk management"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 2.2",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:7.2",
+      "target_name": "Competence",
+      "relationship": "maps_to",
+      "notes": "Both require that personnel are trained and competent for their AI risk management responsibilities"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 2.3",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:5.1",
+      "target_name": "Leadership and Commitment",
+      "relationship": "maps_to",
+      "notes": "ISO requires top management commitment; NIST requires executive leadership accountability for AI risk decisions"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 3.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:7.1",
+      "target_name": "Resources",
+      "relationship": "partially_maps",
+      "notes": "ISO addresses resource allocation broadly; NIST specifically requires diverse teams for AI risk decision-making"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 4.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:7.3",
+      "target_name": "Awareness",
+      "relationship": "maps_to",
+      "notes": "Both foster organizational awareness and culture around AI risk, safety-first mindset"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 4.2",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.9",
+      "target_name": "Accountability (Annex A)",
+      "relationship": "maps_to",
+      "notes": "ISO accountability controls align with documenting and communicating AI risks and impacts"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 5.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:4.2",
+      "target_name": "Understanding Needs of Interested Parties",
+      "relationship": "maps_to",
+      "notes": "Both require engagement with external stakeholders and consideration of their needs regarding AI impacts"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 6.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.10",
+      "target_name": "Third-party and Supply Chain (Annex A)",
+      "relationship": "maps_to",
+      "notes": "Both address AI risks from third-party software, data, and supply chain including IP rights"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 6.2",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.10",
+      "target_name": "Third-party and Supply Chain (Annex A)",
+      "relationship": "maps_to",
+      "notes": "Both require contingency and incident response processes for third-party AI/data failures"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 1.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:4.1",
+      "target_name": "Understanding the Organization and Its Context",
+      "relationship": "maps_to",
+      "notes": "Both require documenting the intended context, applicable laws, norms, and prospective deployment settings"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 1.5",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:6.1",
+      "target_name": "Actions to Address Risks and Opportunities",
+      "relationship": "maps_to",
+      "notes": "Both require documented organizational risk tolerances that guide planning decisions"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 2.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:8.1",
+      "target_name": "Operational Planning and Control",
+      "relationship": "partially_maps",
+      "notes": "ISO operational planning defines AI system scope; NIST requires defining specific tasks and methods the AI supports"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 3.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:6.2",
+      "target_name": "AI Objectives and Planning",
+      "relationship": "maps_to",
+      "notes": "Both require documenting expected benefits and alignment with organizational objectives"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 3.5",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.3",
+      "target_name": "Responsible AI (Annex A)",
+      "relationship": "partially_maps",
+      "notes": "ISO responsible AI covers human oversight; NIST requires defining and documenting human oversight processes"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 4.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:8.4",
+      "target_name": "AI System Impact Assessment",
+      "relationship": "maps_to",
+      "notes": "Both require assessing and documenting risks of AI components including third-party elements"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 1.1",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:9.1",
+      "target_name": "Monitoring, Measurement, Analysis and Evaluation",
+      "relationship": "maps_to",
+      "notes": "Both require selecting and implementing metrics for AI risk measurement"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 1.3",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:9.2",
+      "target_name": "Internal Audit",
+      "relationship": "maps_to",
+      "notes": "ISO requires internal audit by independent parties; NIST requires independent assessors separate from developers"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.8",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.8",
+      "target_name": "Transparency and Explainability (Annex A)",
+      "relationship": "maps_to",
+      "notes": "Both require examining and documenting transparency and accountability risks"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.9",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.8",
+      "target_name": "Transparency and Explainability (Annex A)",
+      "relationship": "maps_to",
+      "notes": "Both require model explainability, validation, and contextual interpretation of outputs"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.11",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.3",
+      "target_name": "Responsible AI (Annex A)",
+      "relationship": "partially_maps",
+      "notes": "ISO responsible AI includes fairness; NIST specifically requires fairness and bias evaluation with documented results"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 1.2",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.2",
+      "target_name": "AI Risk Management (Annex A)",
+      "relationship": "maps_to",
+      "notes": "Both require risk prioritization based on impact, likelihood, and available resources"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 2.3",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:10.2",
+      "target_name": "Nonconformity and Corrective Action",
+      "relationship": "maps_to",
+      "notes": "Both require procedures to respond to and recover from previously unknown risks or nonconformities"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 4.2",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:10.1",
+      "target_name": "Continual Improvement",
+      "relationship": "maps_to",
+      "notes": "Both require measurable activities for continual improvement integrated into AI system updates"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 3.2",
+      "target_framework": "iso42001",
+      "target_id": "ISO42001:A.5",
+      "target_name": "Data for AI Systems (Annex A)",
+      "relationship": "partially_maps",
+      "notes": "ISO data controls cover data quality for AI; NIST requires monitoring pre-trained models as part of maintenance"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.1",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.9",
+      "target_name": "Risk Management System",
+      "relationship": "maps_to",
+      "notes": "EU AI Act Art.9 requires a risk management system throughout the AI lifecycle, paralleling NIST governance requirements"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.2",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.17",
+      "target_name": "Quality Management System",
+      "relationship": "maps_to",
+      "notes": "Art.17 requires a QMS incorporating risk management procedures; NIST integrates trustworthiness into organizational processes"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.4",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.11",
+      "target_name": "Technical Documentation",
+      "relationship": "maps_to",
+      "notes": "Art.11 mandates technical documentation for high-risk AI; NIST requires transparent, documented risk management controls"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.5",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.72",
+      "target_name": "Post-market Monitoring",
+      "relationship": "maps_to",
+      "notes": "Art.72 requires post-market monitoring systems; NIST requires ongoing monitoring and periodic review of risk management"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 1.6",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.12",
+      "target_name": "Record-keeping",
+      "relationship": "partially_maps",
+      "notes": "Art.12 requires automatic logging capabilities; NIST requires AI system inventory mechanisms"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 2.1",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.17",
+      "target_name": "Quality Management System",
+      "relationship": "partially_maps",
+      "notes": "Art.17 QMS includes accountability and role definitions; NIST requires documented roles and communication lines"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 3.2",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.14",
+      "target_name": "Human Oversight",
+      "relationship": "maps_to",
+      "notes": "Art.14 requires effective human oversight of high-risk AI; NIST requires policies defining human-AI configuration and oversight roles"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 4.2",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.13",
+      "target_name": "Transparency and Provision of Information to Deployers",
+      "relationship": "maps_to",
+      "notes": "Art.13 requires transparency about AI capabilities and limitations; NIST requires documenting and communicating AI risks"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 6.1",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.9",
+      "target_name": "Risk Management System",
+      "relationship": "partially_maps",
+      "notes": "Art.9(8) addresses risks from interaction with other AI systems; NIST addresses third-party AI/data risks"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 1.1",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.6",
+      "target_name": "Classification Rules for High-Risk AI",
+      "relationship": "partially_maps",
+      "notes": "Art.6 requires understanding the AI system context for risk classification; NIST requires documenting intended purpose and context"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 1.1",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.9",
+      "target_name": "Risk Management System",
+      "relationship": "maps_to",
+      "notes": "Art.9(2)(a) requires identifying foreseeable risks; NIST requires documenting intended purpose and prospective settings"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 2.2",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.13",
+      "target_name": "Transparency and Provision of Information to Deployers",
+      "relationship": "maps_to",
+      "notes": "Art.13 requires documentation of capabilities and limitations; NIST requires documenting knowledge limits and human oversight"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 3.5",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.14",
+      "target_name": "Human Oversight",
+      "relationship": "maps_to",
+      "notes": "Art.14 specifies human oversight measures; NIST requires defining and documenting human oversight processes"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 4.1",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.27",
+      "target_name": "Fundamental Rights Impact Assessment",
+      "relationship": "partially_maps",
+      "notes": "Art.27 requires impact assessments for certain deployers; NIST requires risk mapping of all components including third parties"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.1",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.9",
+      "target_name": "Risk Management System",
+      "relationship": "maps_to",
+      "notes": "Art.9(5) requires testing with metrics; NIST requires documented test sets, metrics, and tools"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.3",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.15",
+      "target_name": "Accuracy, Robustness and Cybersecurity",
+      "relationship": "maps_to",
+      "notes": "Art.15(1) requires appropriate accuracy levels; NIST requires performance criteria demonstrated in deployment-like conditions"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.5",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.15",
+      "target_name": "Accuracy, Robustness and Cybersecurity",
+      "relationship": "maps_to",
+      "notes": "Art.15 requires accuracy and robustness; NIST requires validity, reliability, and documented generalizability limitations"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.6",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.9",
+      "target_name": "Risk Management System",
+      "relationship": "maps_to",
+      "notes": "Art.9(4) requires risk reduction to acceptable levels; NIST requires safety evaluation with residual risk within tolerance"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.7",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.15",
+      "target_name": "Accuracy, Robustness and Cybersecurity",
+      "relationship": "maps_to",
+      "notes": "Art.15(4)-(5) address cybersecurity and resilience; NIST requires security and resilience evaluation and documentation"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.8",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.13",
+      "target_name": "Transparency and Provision of Information to Deployers",
+      "relationship": "maps_to",
+      "notes": "Art.13 mandates transparency; NIST requires examining and documenting transparency and accountability risks"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.10",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.10",
+      "target_name": "Data and Data Governance",
+      "relationship": "partially_maps",
+      "notes": "Art.10 covers data governance and privacy considerations; NIST requires privacy risk examination and documentation"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.11",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.10",
+      "target_name": "Data and Data Governance",
+      "relationship": "maps_to",
+      "notes": "Art.10(2)(f) requires bias examination in data; NIST requires fairness and bias evaluation with documented results"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 3.3",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.26",
+      "target_name": "Obligations of Deployers of High-Risk AI",
+      "relationship": "partially_maps",
+      "notes": "Art.26 requires deployer monitoring and incident reporting; NIST requires feedback processes for end users and affected communities"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 1.3",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.9",
+      "target_name": "Risk Management System",
+      "relationship": "maps_to",
+      "notes": "Art.9(2) requires adopting risk management measures; NIST requires developing planned responses for high-priority risks"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 2.4",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.14",
+      "target_name": "Human Oversight",
+      "relationship": "maps_to",
+      "notes": "Art.14(4)(e) allows human to override/stop AI; NIST requires mechanisms to disengage or deactivate non-performing AI"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 4.1",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.72",
+      "target_name": "Post-market Monitoring",
+      "relationship": "maps_to",
+      "notes": "Art.72 mandates post-market monitoring; NIST requires post-deployment monitoring plans with user input mechanisms"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 4.3",
+      "target_framework": "eu_ai_act",
+      "target_id": "EUAIA:Art.26",
+      "target_name": "Obligations of Deployers of High-Risk AI",
+      "relationship": "maps_to",
+      "notes": "Art.26(5) requires incident reporting to providers/authorities; NIST requires communicating incidents and errors to affected communities"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.7",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM01",
+      "target_name": "Prompt Injection",
+      "relationship": "related",
+      "notes": "AI security evaluation should include testing for prompt injection attacks as a resilience concern"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.7",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM02",
+      "target_name": "Insecure Output Handling",
+      "relationship": "related",
+      "notes": "Security evaluation should assess whether AI outputs are sanitized before downstream consumption"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.7",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM04",
+      "target_name": "Model Denial of Service",
+      "relationship": "maps_to",
+      "notes": "AI system resilience evaluation directly addresses denial-of-service and resource exhaustion attacks"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.7",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM10",
+      "target_name": "Model Theft",
+      "relationship": "related",
+      "notes": "Security evaluation encompasses protection against model extraction and theft attacks"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.10",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM06",
+      "target_name": "Sensitive Information Disclosure",
+      "relationship": "maps_to",
+      "notes": "Privacy risk examination should specifically address LLM memorization and leakage of sensitive training data"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.6",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM08",
+      "target_name": "Excessive Agency",
+      "relationship": "maps_to",
+      "notes": "Safety evaluation must assess whether AI systems can take unauthorized actions beyond intended scope"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.6",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM09",
+      "target_name": "Overreliance",
+      "relationship": "related",
+      "notes": "Safety evaluation should consider risks of users over-trusting AI outputs without verification"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.5",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM03",
+      "target_name": "Training Data Poisoning",
+      "relationship": "related",
+      "notes": "Validity and reliability testing should include evaluation of training data integrity and poisoning risks"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.5",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM09",
+      "target_name": "Overreliance",
+      "relationship": "partially_maps",
+      "notes": "Documenting limitations of generalizability helps users calibrate reliance on AI system outputs"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 6.1",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM05",
+      "target_name": "Supply Chain Vulnerabilities",
+      "relationship": "maps_to",
+      "notes": "Third-party AI policies must address supply chain risks including compromised models, data, and plugins"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 6.2",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM05",
+      "target_name": "Supply Chain Vulnerabilities",
+      "relationship": "maps_to",
+      "notes": "Contingency processes for third-party failures are essential for managing supply chain vulnerabilities"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 4.2",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM05",
+      "target_name": "Supply Chain Vulnerabilities",
+      "relationship": "maps_to",
+      "notes": "Identifying and documenting third-party risk controls directly mitigates supply chain vulnerability exposure"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 3.1",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM05",
+      "target_name": "Supply Chain Vulnerabilities",
+      "relationship": "maps_to",
+      "notes": "Ongoing monitoring of third-party resources addresses supply chain risks from compromised dependencies"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 3.2",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM05",
+      "target_name": "Supply Chain Vulnerabilities",
+      "relationship": "maps_to",
+      "notes": "Monitoring pre-trained models used in development directly addresses the LLM supply chain attack surface"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 3.2",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM03",
+      "target_name": "Training Data Poisoning",
+      "relationship": "related",
+      "notes": "Monitoring pre-trained models helps detect training data poisoning in upstream dependencies"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.9",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM09",
+      "target_name": "Overreliance",
+      "relationship": "maps_to",
+      "notes": "Model explainability and contextual interpretation of outputs helps users avoid overreliance on AI"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "GOVERN 3.2",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM08",
+      "target_name": "Excessive Agency",
+      "relationship": "maps_to",
+      "notes": "Human oversight policies and clear human-AI role definitions directly mitigate excessive agency risks"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 3.5",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM08",
+      "target_name": "Excessive Agency",
+      "relationship": "maps_to",
+      "notes": "Defining human oversight processes constrains AI system autonomy, reducing excessive agency risk"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MAP 4.2",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM07",
+      "target_name": "Insecure Plugin Design",
+      "relationship": "related",
+      "notes": "Internal risk controls for third-party components should address insecure plugin design patterns"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 2.3",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM01",
+      "target_name": "Prompt Injection",
+      "relationship": "related",
+      "notes": "Incident response procedures should cover prompt injection discovery as a previously unknown risk vector"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 4.1",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM02",
+      "target_name": "Insecure Output Handling",
+      "relationship": "related",
+      "notes": "Post-deployment monitoring should include detection of insecure output handling in production"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MANAGE 2.4",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM08",
+      "target_name": "Excessive Agency",
+      "relationship": "maps_to",
+      "notes": "Mechanisms to disengage or deactivate AI are a direct control against excessive agency in production"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.1",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM01",
+      "target_name": "Prompt Injection",
+      "relationship": "partially_maps",
+      "notes": "TEVV documentation should include prompt injection test cases and red-teaming results for LLM systems"
+    },
+    {
+      "source_framework": "nist_ai_rmf",
+      "source_id": "MEASURE 2.1",
+      "target_framework": "owasp_llm",
+      "target_id": "OWASP:LLM03",
+      "target_name": "Training Data Poisoning",
+      "relationship": "partially_maps",
+      "notes": "Testing documentation should cover training data validation and integrity verification procedures"
+    }
+  ]
+}
