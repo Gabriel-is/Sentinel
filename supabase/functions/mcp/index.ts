@@ -319,59 +319,40 @@ async function handleLookup(
     return { match_type: "control", control: ctrlMatch[0] };
   }
 
-  // Fall back to full-text search
-  let scopeFilter = "";
-  if (scope === "nist") {
-    scopeFilter =
-      " AND entity_type IN ('function','category','subcategory')";
-  } else if (scope === "fs") {
-    scopeFilter = " AND entity_type = 'control'";
-  }
+  // Fall back to text search across tables
+  // Sanitize search query for PostgREST filters (escape special chars)
+  const sanitized = searchQuery.replace(/[%_.*,()]/g, " ").trim();
+  if (!sanitized) return { match_type: "search", query: searchQuery, scope, glossary_matches: [], subcategory_matches: [], control_matches: [] };
 
-  const { data: searchResults, error } = await supabase.rpc(
-    "sentinel_fts",
-    { search_term: searchQuery, scope_filter: scope }
-  );
+  // Search glossary via full-text search
+  const { data: glossaryHits } = await supabase
+    .from("sentinel_glossary")
+    .select("term, definition, source, category")
+    .textSearch("search_vector", sanitized, { type: "websearch", config: "english" })
+    .limit(5);
 
-  // If RPC doesn't exist, fall back to direct query via glossary + controls
-  if (error) {
-    // Search glossary
-    const { data: glossaryHits } = await supabase
-      .from("sentinel_glossary")
-      .select("term, definition, source, category")
-      .textSearch("search_vector", searchQuery, {
-        type: "websearch",
-        config: "english",
-      })
-      .limit(5);
+  // Search controls by ilike on objective text
+  const { data: controlHits } = scope !== "nist" ? await supabase
+    .from("sentinel_control_objectives")
+    .select("id, subcategory_id, objective_text, trustworthy_principle")
+    .ilike("objective_text", `%${sanitized}%`)
+    .limit(10) : { data: [] };
 
-    // Search controls by text
-    const { data: controlHits } = await supabase
-      .from("sentinel_control_objectives")
-      .select("id, subcategory_id, objective_text, trustworthy_principle")
-      .or(
-        `objective_text.ilike.%${searchQuery}%,implementation_guidance.ilike.%${searchQuery}%`
-      )
-      .limit(10);
+  // Search subcategories
+  const { data: subHits } = scope !== "fs" ? await supabase
+    .from("sentinel_subcategories")
+    .select("id, category_id, description")
+    .ilike("description", `%${sanitized}%`)
+    .limit(5) : { data: [] };
 
-    // Search subcategories by text
-    const { data: subHits } = await supabase
-      .from("sentinel_subcategories")
-      .select("id, category_id, description")
-      .ilike("description", `%${searchQuery}%`)
-      .limit(5);
-
-    return {
-      match_type: "search",
-      query: searchQuery,
-      scope,
-      glossary_matches: glossaryHits || [],
-      subcategory_matches: subHits || [],
-      control_matches: controlHits || [],
-    };
-  }
-
-  return { match_type: "search", query: searchQuery, scope, results: searchResults };
+  return {
+    match_type: "search",
+    query: searchQuery,
+    scope,
+    glossary_matches: glossaryHits || [],
+    subcategory_matches: subHits || [],
+    control_matches: controlHits || [],
+  };
 }
 
 async function handleExplain(
@@ -383,14 +364,15 @@ async function handleExplain(
     depth?: string;
   };
 
-  // Try to find the topic in our data
-  const topicUpper = topic.toUpperCase().trim();
+  // Sanitize topic for PostgREST filters
+  const sanitized = topic.replace(/[%_.*,()]/g, " ").trim();
+  const sanitizedUpper = sanitized.toUpperCase();
 
   // Check if it's a function name
   const { data: fnData } = await supabase
     .from("sentinel_functions")
     .select("*")
-    .or(`id.ilike.%${topicUpper}%,name.ilike.%${topic}%`)
+    .or(`id.ilike.%${sanitizedUpper}%,name.ilike.%${sanitized}%`)
     .limit(1);
 
   if (fnData?.length) {
@@ -425,8 +407,8 @@ async function handleExplain(
   // Check subcategory
   const { data: subData } = await supabase
     .from("sentinel_subcategories")
-    .select("*, sentinel_categories!inner(name, function_id)")
-    .or(`id.ilike.%${topicUpper}%,description.ilike.%${topic}%`)
+    .select("id, category_id, name, description, suggested_actions")
+    .or(`id.ilike.%${sanitizedUpper}%,description.ilike.%${sanitized}%`)
     .limit(1);
 
   if (subData?.length) {
@@ -453,7 +435,7 @@ async function handleExplain(
   const { data: glossData } = await supabase
     .from("sentinel_glossary")
     .select("*")
-    .or(`term.ilike.%${topic}%,definition.ilike.%${topic}%`)
+    .or(`term.ilike.%${sanitized}%,definition.ilike.%${sanitized}%`)
     .limit(3);
 
   if (glossData?.length) {
@@ -469,7 +451,7 @@ async function handleExplain(
     .from("sentinel_control_objectives")
     .select("*")
     .or(
-      `id.ilike.%${topicUpper}%,objective_text.ilike.%${topic}%`
+      `id.ilike.%${sanitizedUpper}%,objective_text.ilike.%${sanitized}%`
     )
     .limit(3);
 
@@ -717,8 +699,15 @@ async function handleAssess(
     context?: string;
   };
 
+  // Input validation
+  const MAX_CONTENT_LENGTH = 100_000; // 100KB
+  if (!content || content.length === 0) {
+    return { error: "Content is required for assessment." };
+  }
+  const trimmedContent = content.slice(0, MAX_CONTENT_LENGTH);
+
   // Extract keywords from the input content
-  const contentLower = content.toLowerCase();
+  const contentLower = trimmedContent.toLowerCase();
   const keywords = extractKeywords(contentLower);
 
   // Get all controls with their subcategory context
