@@ -1,0 +1,582 @@
+{
+  "source": "NIST AI RMF + FS AI RMF + Domain Knowledge",
+  "version": "1.0",
+  "generated": "2026-04-10",
+  "term_count": 82,
+  "terms": [
+    {
+      "term": "AI Risk Management Framework",
+      "definition": "A voluntary framework published by NIST (AI 100-1) that provides organizations with a structured approach to managing risks associated with AI systems throughout their lifecycle. It is organized around four core functions: Govern, Map, Measure, and Manage.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Trustworthiness", "AI system", "AI lifecycle", "Risk assessment"],
+      "category": "governance"
+    },
+    {
+      "term": "AI system",
+      "definition": "An engineered or machine-based system that can, for a given set of objectives, generate outputs such as predictions, recommendations, decisions, or content that influence real or virtual environments. AI systems vary in autonomy and adaptiveness after deployment.",
+      "source": "NIST AI RMF",
+      "related_terms": ["AI lifecycle", "AI actor", "Machine learning"],
+      "category": "technical"
+    },
+    {
+      "term": "AI actor",
+      "definition": "Any individual or organization that plays a role in the design, development, deployment, evaluation, use, or monitoring of an AI system. AI actors span the full AI lifecycle and include developers, deployers, operators, evaluators, affected individuals, and oversight bodies.",
+      "source": "NIST AI RMF",
+      "related_terms": ["AI system", "AI lifecycle", "Human oversight"],
+      "category": "governance"
+    },
+    {
+      "term": "AI lifecycle",
+      "definition": "The sequential and iterative stages through which an AI system progresses, including planning and design, data collection and processing, model building, testing, deployment, operation, monitoring, and eventual decommissioning.",
+      "source": "NIST AI RMF",
+      "related_terms": ["AI system", "AI actor", "Decommissioning", "TEVV"],
+      "category": "governance"
+    },
+    {
+      "term": "Trustworthiness",
+      "definition": "A composite quality of AI systems encompassing characteristics such as validity, reliability, safety, security, resilience, accountability, transparency, explainability, interpretability, privacy, and fairness. The NIST AI RMF treats trustworthiness as the overarching goal of AI risk management.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Fairness", "Transparency", "Accountability", "Safety", "Reliability"],
+      "category": "governance"
+    },
+    {
+      "term": "Bias (harmful)",
+      "definition": "Systematic errors in AI system outputs that create unfair outcomes for particular groups or individuals. Harmful bias can originate from training data, algorithm design, or deployment context, and may be statistical, cognitive, or systemic in nature.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Fairness", "Trustworthiness", "Data governance"],
+      "category": "risk"
+    },
+    {
+      "term": "Fairness",
+      "definition": "The principle that AI systems should not produce unjust or prejudicial outcomes for different demographic groups or individuals. Fairness encompasses equitable treatment, equalized opportunity, and the mitigation of harmful bias throughout the AI lifecycle.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Bias (harmful)", "Trustworthiness", "Accountability"],
+      "category": "governance"
+    },
+    {
+      "term": "Transparency",
+      "definition": "The extent to which information about an AI system and its outputs is available to individuals interacting with it or affected by it. Transparency supports accountability and helps stakeholders understand how decisions are made.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Explainability", "Interpretability", "Accountability", "Audit trail"],
+      "category": "governance"
+    },
+    {
+      "term": "Accountability",
+      "definition": "The principle that organizations and individuals responsible for AI systems are answerable for their functioning, outcomes, and compliance with applicable norms. Accountability requires clear roles, governance structures, and mechanisms for redress.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Transparency", "Human oversight", "Three lines of defense", "Governance"],
+      "category": "governance"
+    },
+    {
+      "term": "Explainability",
+      "definition": "The ability to articulate the reasons behind an AI system's outputs or decisions in terms understandable to relevant stakeholders. Explainability is distinct from interpretability in that it focuses on post-hoc justification rather than inherent model transparency.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Interpretability", "Transparency", "Trustworthiness"],
+      "category": "technical"
+    },
+    {
+      "term": "Interpretability",
+      "definition": "The degree to which a human can understand the internal mechanisms and decision-making processes of an AI model without supplementary explanation. Interpretable models allow stakeholders to directly inspect how inputs map to outputs.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Explainability", "Transparency", "Neural network"],
+      "category": "technical"
+    },
+    {
+      "term": "Privacy",
+      "definition": "The norms and practices that protect individuals' personal information and autonomy from unauthorized collection, use, or disclosure by AI systems. Privacy in AI encompasses data minimization, consent, anonymization, and compliance with applicable data protection laws.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Data governance", "Security", "Trustworthiness"],
+      "category": "governance"
+    },
+    {
+      "term": "Security",
+      "definition": "The protection of AI systems, their data, and infrastructure from unauthorized access, manipulation, or disruption. AI security addresses threats such as adversarial attacks, data poisoning, model theft, and prompt injection.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Resilience", "Privacy", "Red teaming", "Guardrails"],
+      "category": "technical"
+    },
+    {
+      "term": "Resilience",
+      "definition": "The capacity of an AI system to withstand, recover from, and adapt to unexpected conditions, adversarial attacks, or operational disruptions while maintaining acceptable performance levels.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Security", "Reliability", "Safety", "Incident response"],
+      "category": "technical"
+    },
+    {
+      "term": "Validity",
+      "definition": "The extent to which an AI system's outputs accurately represent what they are intended to measure or predict, as confirmed through empirical testing against ground truth or domain requirements.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Reliability", "TEVV", "Back-testing", "Model validation"],
+      "category": "technical"
+    },
+    {
+      "term": "Reliability",
+      "definition": "The ability of an AI system to perform its intended functions consistently and accurately over time, across different conditions, and within defined operating parameters.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Validity", "Safety", "Model decay", "Concept drift"],
+      "category": "technical"
+    },
+    {
+      "term": "Safety",
+      "definition": "The condition in which an AI system does not, under defined conditions, lead to a state that endangers human life, health, property, or the environment. Safety requirements increase with the criticality and autonomy of the AI application.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Resilience", "Reliability", "Human oversight", "Guardrails"],
+      "category": "risk"
+    },
+    {
+      "term": "Risk tolerance",
+      "definition": "The level and type of risk an organization is willing to accept in pursuit of its objectives. Risk tolerance defines the boundaries within which AI systems may operate and informs decisions about risk treatment.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Risk appetite", "Risk assessment", "Risk treatment", "Material risk"],
+      "category": "risk"
+    },
+    {
+      "term": "Risk assessment",
+      "definition": "The systematic process of identifying, analyzing, and evaluating risks associated with an AI system, including the likelihood and severity of potential negative impacts across technical, societal, and organizational dimensions.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Risk tolerance", "Risk treatment", "Residual risk", "Scenario analysis"],
+      "category": "risk"
+    },
+    {
+      "term": "Risk treatment",
+      "definition": "The process of selecting and implementing measures to modify identified AI risks, including risk avoidance, mitigation, transfer, or acceptance. Treatment decisions are informed by risk assessment outcomes and organizational risk tolerance.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Risk assessment", "Risk tolerance", "Residual risk", "Control objective"],
+      "category": "risk"
+    },
+    {
+      "term": "Residual risk",
+      "definition": "The risk that remains after risk treatment measures have been applied. Residual risk must be documented, monitored, and accepted within the organization's risk tolerance, as no treatment can eliminate all risk.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Risk treatment", "Risk tolerance", "Risk assessment"],
+      "category": "risk"
+    },
+    {
+      "term": "TEVV",
+      "definition": "Testing, Evaluation, Validation, and Verification. A comprehensive set of processes used throughout the AI lifecycle to confirm that an AI system meets its requirements, performs as intended, and produces trustworthy outputs under various conditions.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Model validation", "Back-testing", "Red teaming", "Benchmarking"],
+      "category": "technical"
+    },
+    {
+      "term": "Model risk",
+      "definition": "The potential for adverse consequences arising from decisions based on incorrect or misused model outputs. In financial services, model risk is a supervisory concern governed by guidance such as SR 11-7 and OCC 2011-12.",
+      "source": "SR 11-7 / OCC 2011-12",
+      "related_terms": ["Model validation", "Model Risk Management", "SR 11-7", "Model decay"],
+      "category": "risk"
+    },
+    {
+      "term": "Model validation",
+      "definition": "The independent assessment of a model's conceptual soundness, implementation correctness, and ongoing performance to ensure it is fit for its intended purpose. Validation is a core component of model risk management in financial services.",
+      "source": "SR 11-7 / OCC 2011-12",
+      "related_terms": ["Model risk", "TEVV", "Effective challenge", "Back-testing"],
+      "category": "risk"
+    },
+    {
+      "term": "Third-party risk",
+      "definition": "The risks introduced when an organization relies on external vendors, partners, or service providers for AI system components, data, or services. Third-party risk management requires due diligence, contractual controls, and ongoing monitoring.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Supply chain risk", "Operational risk", "AI actor"],
+      "category": "risk"
+    },
+    {
+      "term": "Supply chain risk",
+      "definition": "Risks arising from the components, data, models, and services sourced from third parties that are integrated into an AI system. Supply chain risks include data provenance issues, model vulnerabilities, and dependency on external infrastructure.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Third-party risk", "Data lineage", "Data governance"],
+      "category": "risk"
+    },
+    {
+      "term": "Human oversight",
+      "definition": "The involvement of humans in monitoring, supervising, and intervening in AI system operations to ensure safe, ethical, and effective outcomes. Oversight can range from human-in-the-loop (approval before action) to human-on-the-loop (monitoring with intervention capability).",
+      "source": "NIST AI RMF",
+      "related_terms": ["Human-AI teaming", "Accountability", "Safety", "Agentic AI"],
+      "category": "governance"
+    },
+    {
+      "term": "Human-AI teaming",
+      "definition": "The collaborative interaction between humans and AI systems where each contributes complementary capabilities to achieve outcomes neither could accomplish as effectively alone. Effective teaming requires calibrated trust, clear role delineation, and appropriate human oversight.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Human oversight", "AI actor", "Trustworthiness"],
+      "category": "governance"
+    },
+    {
+      "term": "Decommissioning",
+      "definition": "The planned and controlled retirement of an AI system, including the cessation of its operations, archival or deletion of associated data and models, and documentation of its operational history. Decommissioning is a critical but often overlooked phase of the AI lifecycle.",
+      "source": "NIST AI RMF",
+      "related_terms": ["AI lifecycle", "Data governance", "Audit trail"],
+      "category": "governance"
+    },
+    {
+      "term": "Incident response",
+      "definition": "The processes and procedures for detecting, reporting, analyzing, and remediating adverse events or failures involving AI systems. Incident response plans should be pre-established, tested, and integrated with existing organizational response frameworks.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Resilience", "Safety", "Operational risk", "Red teaming"],
+      "category": "risk"
+    },
+    {
+      "term": "Red teaming",
+      "definition": "A structured adversarial testing approach where a designated team probes an AI system for vulnerabilities, failure modes, and unintended behaviors by simulating realistic attack scenarios. Red teaming is a key TEVV activity for identifying risks that standard testing may miss.",
+      "source": "NIST AI RMF",
+      "related_terms": ["TEVV", "Security", "Stress testing", "Guardrails"],
+      "category": "technical"
+    },
+    {
+      "term": "Adoption stage",
+      "definition": "In the FS AI RMF, one of three maturity levels (Early, Expanding, Mature) that characterizes an organization's current state of AI adoption. The applicable adoption stage determines which control objectives are relevant and the expected rigor of implementation.",
+      "source": "FS AI RMF",
+      "related_terms": ["Control objective", "Maturity model", "AI Risk Management Framework"],
+      "category": "regulatory"
+    },
+    {
+      "term": "Control objective",
+      "definition": "A specific, measurable goal that an organization should achieve to manage a particular AI risk. The FS AI RMF defines 230 control objectives organized by the NIST AI RMF functions (Govern, Map, Measure, Manage) and mapped to adoption stages.",
+      "source": "FS AI RMF",
+      "related_terms": ["Adoption stage", "Crosswalk", "AI Risk Management Framework"],
+      "category": "regulatory"
+    },
+    {
+      "term": "Crosswalk",
+      "definition": "A mapping between the requirements, controls, or standards of two or more regulatory frameworks, enabling organizations to demonstrate compliance across multiple regimes simultaneously. Crosswalks identify overlaps, gaps, and equivalences between frameworks.",
+      "source": "FS AI RMF",
+      "related_terms": ["Control objective", "Informative reference", "SR 11-7"],
+      "category": "regulatory"
+    },
+    {
+      "term": "Informative reference",
+      "definition": "A supplementary document, standard, or guidance that provides additional context, detail, or implementation advice for a control objective or framework element. Informative references are not mandatory but help organizations operationalize requirements.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Control objective", "Crosswalk", "AI Risk Management Framework"],
+      "category": "regulatory"
+    },
+    {
+      "term": "Maturity model",
+      "definition": "A structured framework for assessing an organization's capability and sophistication in a specific domain, typically defined as a progression through discrete levels. In AI risk management, maturity models help organizations benchmark their current state and plan improvements.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Adoption stage", "Control objective", "AI Risk Management Framework"],
+      "category": "governance"
+    },
+    {
+      "term": "SIFMU",
+      "definition": "Systemically Important Financial Market Utility. A financial market infrastructure designated by the Financial Stability Oversight Council (FSOC) whose failure could pose systemic risk to the US financial system. SIFMUs face heightened supervisory expectations for risk management, including AI risk.",
+      "source": "Dodd-Frank Act / Domain Knowledge",
+      "related_terms": ["Operational risk", "Concentration risk", "OCC"],
+      "category": "regulatory"
+    },
+    {
+      "term": "SR 11-7",
+      "definition": "Federal Reserve Supervisory Guidance on Model Risk Management, issued in 2011. SR 11-7 establishes expectations for model development, validation, and governance at banking organizations and remains the foundational regulatory reference for model risk management in US financial services.",
+      "source": "Federal Reserve",
+      "related_terms": ["Model risk", "Model Risk Management", "Model validation", "OCC", "Effective challenge"],
+      "category": "regulatory"
+    },
+    {
+      "term": "OCC",
+      "definition": "Office of the Comptroller of the Currency. An independent bureau of the US Treasury Department that charters, regulates, and supervises national banks and federal savings associations. The OCC has issued parallel model risk guidance (OCC 2011-12) and is actively engaged in AI risk policy.",
+      "source": "Domain Knowledge",
+      "related_terms": ["SR 11-7", "Model Risk Management", "Regulatory capital"],
+      "category": "regulatory"
+    },
+    {
+      "term": "Model Risk Management",
+      "definition": "The organizational framework of policies, processes, and controls for identifying, measuring, monitoring, and controlling model risk across the enterprise. In financial services, MRM programs are required by SR 11-7 and OCC 2011-12 and are increasingly expected to cover AI/ML models.",
+      "source": "SR 11-7 / OCC 2011-12",
+      "related_terms": ["Model risk", "Model validation", "SR 11-7", "Three lines of defense"],
+      "category": "risk"
+    },
+    {
+      "term": "Three lines of defense",
+      "definition": "A governance model in which the first line (business/operations) owns and manages risk, the second line (risk management and compliance) provides independent oversight and challenge, and the third line (internal audit) provides independent assurance. This model is foundational to financial services risk governance.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Effective challenge", "Accountability", "Model Risk Management"],
+      "category": "governance"
+    },
+    {
+      "term": "Effective challenge",
+      "definition": "Critical analysis and questioning of a model's design, assumptions, outputs, and limitations by qualified individuals who are independent of the model development process. Effective challenge is a core requirement of SR 11-7 and ensures that model risk is surfaced and addressed.",
+      "source": "SR 11-7",
+      "related_terms": ["Model validation", "Three lines of defense", "Model Risk Management"],
+      "category": "governance"
+    },
+    {
+      "term": "Risk appetite",
+      "definition": "The aggregate amount and types of risk an organization is willing to accept or pursue in order to achieve its strategic objectives, expressed as a board-approved statement. Risk appetite is broader than risk tolerance and sets the tone for enterprise risk management.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Risk tolerance", "Risk capacity", "Risk assessment", "Material risk"],
+      "category": "risk"
+    },
+    {
+      "term": "Risk capacity",
+      "definition": "The maximum level of risk an organization can absorb before it threatens its viability, as determined by its capital, liquidity, operational capability, and regulatory constraints. Risk capacity sets the outer boundary within which risk appetite must be defined.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Risk appetite", "Risk tolerance", "Regulatory capital"],
+      "category": "risk"
+    },
+    {
+      "term": "Concentration risk",
+      "definition": "The risk arising from overexposure to a single counterparty, sector, geography, technology, or data source. In AI, concentration risk can manifest as dependence on a single model vendor, a single training dataset, or a dominant foundation model provider.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Third-party risk", "Operational risk", "Supply chain risk"],
+      "category": "risk"
+    },
+    {
+      "term": "Operational risk",
+      "definition": "The risk of loss resulting from inadequate or failed internal processes, people, systems, or external events. AI-specific operational risks include model failures, data pipeline disruptions, and unintended autonomous actions.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Incident response", "Resilience", "Compliance risk", "Model risk"],
+      "category": "risk"
+    },
+    {
+      "term": "Compliance risk",
+      "definition": "The risk of legal or regulatory sanctions, financial loss, or reputational damage arising from failure to comply with applicable laws, regulations, or standards. AI introduces novel compliance risks related to algorithmic fairness, data privacy, and emerging AI-specific regulations.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Regulatory capital", "OCC", "SR 11-7", "Accountability"],
+      "category": "risk"
+    },
+    {
+      "term": "Regulatory capital",
+      "definition": "The minimum amount of capital a financial institution must hold as required by banking regulators to absorb losses and maintain solvency. AI model failures in areas like credit risk or market risk can directly impact regulatory capital calculations.",
+      "source": "Domain Knowledge",
+      "related_terms": ["OCC", "Compliance risk", "Risk capacity", "Stress testing"],
+      "category": "regulatory"
+    },
+    {
+      "term": "Stress testing",
+      "definition": "A risk analysis technique that evaluates how a system, model, or portfolio performs under extreme but plausible adverse scenarios. For AI systems, stress testing includes evaluating model behavior under distribution shifts, adversarial inputs, and degraded data quality.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Scenario analysis", "Red teaming", "Model validation", "Back-testing"],
+      "category": "risk"
+    },
+    {
+      "term": "Scenario analysis",
+      "definition": "A forward-looking risk assessment method that explores the potential impacts of hypothetical events or conditions on an organization or system. Scenario analysis for AI includes evaluating the effects of model failures, data breaches, or regulatory changes.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Stress testing", "Risk assessment", "Resilience"],
+      "category": "risk"
+    },
+    {
+      "term": "Material risk",
+      "definition": "A risk of sufficient magnitude that its realization could significantly affect an organization's financial condition, operations, or reputation. Materiality thresholds determine which AI systems require enhanced governance, validation, and oversight.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Risk appetite", "Risk tolerance", "Model risk"],
+      "category": "risk"
+    },
+    {
+      "term": "Audit trail",
+      "definition": "A chronological record of system activities, decisions, and changes that enables reconstruction and review of the sequence of events. For AI systems, audit trails should capture data inputs, model versions, configuration changes, predictions, and human interventions.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Transparency", "Accountability", "Data lineage", "Data governance"],
+      "category": "governance"
+    },
+    {
+      "term": "Data governance",
+      "definition": "The framework of policies, standards, processes, and organizational structures that ensure data is managed as a strategic asset with appropriate quality, security, privacy, and compliance controls throughout its lifecycle.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Data lineage", "Privacy", "Audit trail", "Bias (harmful)"],
+      "category": "governance"
+    },
+    {
+      "term": "Data lineage",
+      "definition": "The documented history of data as it flows through collection, transformation, storage, and consumption stages. Data lineage enables organizations to trace AI model inputs back to their origins for auditability, debugging, and regulatory compliance.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Data governance", "Audit trail", "Feature engineering", "Supply chain risk"],
+      "category": "technical"
+    },
+    {
+      "term": "Feature engineering",
+      "definition": "The process of selecting, transforming, and creating input variables (features) from raw data to improve the performance and interpretability of machine learning models. Feature engineering decisions can introduce or mitigate bias and significantly affect model behavior.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Data lineage", "Machine learning", "Bias (harmful)", "Data governance"],
+      "category": "technical"
+    },
+    {
+      "term": "Concept drift",
+      "definition": "A change in the statistical relationship between input features and the target variable over time, causing a model's learned patterns to become outdated. Concept drift degrades model performance and requires ongoing monitoring and retraining strategies.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Data drift", "Model decay", "Reliability", "TEVV"],
+      "category": "technical"
+    },
+    {
+      "term": "Data drift",
+      "definition": "A change in the statistical distribution of input data over time compared to the data on which a model was trained. Data drift can degrade model accuracy even when the underlying relationship between features and target remains stable.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Concept drift", "Model decay", "Model validation"],
+      "category": "technical"
+    },
+    {
+      "term": "Model decay",
+      "definition": "The gradual degradation of a model's predictive performance over time, typically caused by concept drift, data drift, or changes in the operating environment. Model decay necessitates ongoing monitoring, retraining, and validation protocols.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Concept drift", "Data drift", "Model validation", "Champion-challenger"],
+      "category": "technical"
+    },
+    {
+      "term": "Champion-challenger",
+      "definition": "A model management strategy in which the currently deployed model (champion) is continuously compared against one or more alternative models (challengers) to determine whether a replacement would improve performance. This approach supports evidence-based model updates.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Shadow model", "Model decay", "Model validation", "Benchmarking"],
+      "category": "technical"
+    },
+    {
+      "term": "Shadow model",
+      "definition": "A model that runs in parallel with the production model, receiving the same inputs and generating predictions, but whose outputs are not used for decision-making. Shadow models are used to evaluate candidate replacements under real-world conditions without production risk.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Champion-challenger", "Model validation", "Back-testing"],
+      "category": "technical"
+    },
+    {
+      "term": "Back-testing",
+      "definition": "A validation technique that evaluates a model's predictions against actual observed outcomes using historical data. Back-testing assesses whether a model would have performed acceptably in the past and is a standard requirement in financial model validation.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Model validation", "TEVV", "Benchmarking", "Stress testing"],
+      "category": "technical"
+    },
+    {
+      "term": "Benchmarking",
+      "definition": "The practice of comparing an AI model's performance against established standards, baseline models, or industry peers using standardized metrics and test datasets. Benchmarking provides objective context for evaluating model quality and identifying areas for improvement.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Back-testing", "TEVV", "Champion-challenger", "Model validation"],
+      "category": "technical"
+    },
+    {
+      "term": "Machine learning",
+      "definition": "A subset of artificial intelligence in which algorithms learn patterns from data to make predictions or decisions without being explicitly programmed for each task. Machine learning encompasses supervised, unsupervised, and reinforcement learning paradigms.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Deep learning", "Supervised learning", "Unsupervised learning", "Reinforcement learning"],
+      "category": "technical"
+    },
+    {
+      "term": "Deep learning",
+      "definition": "A subset of machine learning that uses neural networks with multiple layers (deep architectures) to learn hierarchical representations of data. Deep learning has achieved state-of-the-art results in vision, language, and other domains but typically has lower interpretability.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Neural network", "Machine learning", "Large language model", "Interpretability"],
+      "category": "technical"
+    },
+    {
+      "term": "Neural network",
+      "definition": "A computational model inspired by biological neural systems, consisting of interconnected layers of nodes (neurons) that process and transform inputs through learned weights and activation functions. Neural networks are the foundation of deep learning systems.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Deep learning", "Machine learning", "Interpretability"],
+      "category": "technical"
+    },
+    {
+      "term": "Large language model",
+      "definition": "A neural network trained on massive text corpora to understand and generate human language, typically using transformer architectures with billions of parameters. LLMs power conversational AI, text generation, and many generative AI applications but introduce unique risks including hallucination and prompt injection.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Generative AI", "Hallucination", "Prompt engineering", "Alignment"],
+      "category": "technical"
+    },
+    {
+      "term": "Generative AI",
+      "definition": "AI systems capable of creating new content such as text, images, audio, code, or synthetic data based on patterns learned from training data. Generative AI introduces novel risks around authenticity, intellectual property, and the propagation of misinformation.",
+      "source": "NIST AI 600-1",
+      "related_terms": ["Large language model", "Hallucination", "Alignment", "Guardrails"],
+      "category": "technical"
+    },
+    {
+      "term": "Reinforcement learning",
+      "definition": "A machine learning paradigm in which an agent learns to make decisions by taking actions in an environment and receiving reward or penalty signals. Reinforcement learning is used in robotics, game playing, and increasingly in fine-tuning language models via RLHF.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Machine learning", "Alignment", "Agentic AI"],
+      "category": "technical"
+    },
+    {
+      "term": "Supervised learning",
+      "definition": "A machine learning approach in which a model is trained on labeled data, learning to map inputs to known outputs. Common applications include classification, regression, and structured prediction tasks.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Machine learning", "Unsupervised learning", "Feature engineering"],
+      "category": "technical"
+    },
+    {
+      "term": "Unsupervised learning",
+      "definition": "A machine learning approach in which a model identifies patterns, structures, or groupings in unlabeled data without explicit target variables. Applications include clustering, anomaly detection, and dimensionality reduction.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Machine learning", "Supervised learning", "Embeddings"],
+      "category": "technical"
+    },
+    {
+      "term": "Transfer learning",
+      "definition": "A machine learning technique in which a model trained on one task or dataset is adapted for a different but related task, leveraging previously learned representations to improve performance and reduce training data requirements.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Fine-tuning", "Large language model", "Deep learning"],
+      "category": "technical"
+    },
+    {
+      "term": "Fine-tuning",
+      "definition": "The process of further training a pre-trained model on a smaller, task-specific dataset to adapt its behavior for a particular use case. Fine-tuning is a key step in deploying foundation models for domain-specific applications in financial services and other regulated industries.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Transfer learning", "Large language model", "Alignment"],
+      "category": "technical"
+    },
+    {
+      "term": "Prompt engineering",
+      "definition": "The practice of designing, structuring, and optimizing input prompts to elicit desired outputs from large language models. Effective prompt engineering can improve accuracy, reduce hallucination, and enforce output constraints without model retraining.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Large language model", "Hallucination", "Guardrails", "Generative AI"],
+      "category": "technical"
+    },
+    {
+      "term": "Embeddings",
+      "definition": "Dense, low-dimensional vector representations of data (text, images, etc.) that capture semantic relationships and enable similarity computations. Embeddings are foundational to modern AI systems for search, recommendation, clustering, and retrieval-augmented generation.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Neural network", "Large language model", "Unsupervised learning"],
+      "category": "technical"
+    },
+    {
+      "term": "Hallucination",
+      "definition": "The generation of outputs by an AI system that are syntactically plausible but factually incorrect, unsupported, or fabricated. Hallucination is a significant risk in generative AI and large language models, particularly in regulated domains where accuracy is critical.",
+      "source": "NIST AI 600-1",
+      "related_terms": ["Large language model", "Generative AI", "Reliability", "Guardrails"],
+      "category": "risk"
+    },
+    {
+      "term": "Alignment",
+      "definition": "The degree to which an AI system's objectives, behaviors, and outputs are consistent with human values, intentions, and established norms. Alignment research addresses how to ensure AI systems act in accordance with their intended purpose and do not pursue unintended goals.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Guardrails", "Safety", "Trustworthiness", "Reinforcement learning"],
+      "category": "technical"
+    },
+    {
+      "term": "Guardrails",
+      "definition": "Technical and procedural safeguards that constrain AI system behavior within acceptable boundaries, preventing harmful, off-topic, or policy-violating outputs. Guardrails include input filtering, output validation, content policies, and automated monitoring.",
+      "source": "Domain Knowledge",
+      "related_terms": ["Alignment", "Safety", "Security", "Hallucination"],
+      "category": "technical"
+    },
+    {
+      "term": "Agentic AI",
+      "definition": "AI systems that can autonomously plan, reason, use tools, and take multi-step actions to achieve goals with minimal human intervention. Agentic AI introduces heightened risks around controllability, accountability, and unintended consequences that require robust human oversight frameworks.",
+      "source": "NIST AI 600-1",
+      "related_terms": ["Human oversight", "Alignment", "Safety", "Large language model"],
+      "category": "technical"
+    },
+    {
+      "term": "Govern",
+      "definition": "The first core function of the NIST AI RMF, focused on cultivating a culture of risk management, establishing policies and processes, defining roles and responsibilities, and ensuring organizational accountability for AI risk management across the enterprise.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Map", "Measure", "Manage", "AI Risk Management Framework", "Accountability"],
+      "category": "governance"
+    },
+    {
+      "term": "Map",
+      "definition": "The second core function of the NIST AI RMF, focused on establishing the context for AI risk management by identifying and documenting the AI system's purpose, stakeholders, potential impacts, constraints, and the broader operational environment.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Govern", "Measure", "Manage", "AI Risk Management Framework", "Risk assessment"],
+      "category": "governance"
+    },
+    {
+      "term": "Measure",
+      "definition": "The third core function of the NIST AI RMF, focused on employing quantitative and qualitative methods to analyze, assess, benchmark, and monitor AI risks and their impacts using appropriate metrics, tools, and techniques.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Govern", "Map", "Manage", "TEVV", "AI Risk Management Framework"],
+      "category": "governance"
+    },
+    {
+      "term": "Manage",
+      "definition": "The fourth core function of the NIST AI RMF, focused on allocating resources and implementing plans to respond to, recover from, and communicate about AI risks based on the outputs of the Map and Measure functions.",
+      "source": "NIST AI RMF",
+      "related_terms": ["Govern", "Map", "Measure", "Risk treatment", "AI Risk Management Framework"],
+      "category": "governance"
+    }
+  ]
+}

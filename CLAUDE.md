@@ -7,7 +7,7 @@ A standalone MCP server that teaches and checks compliance against the NIST AI R
 - **Runtime:** Deno (Supabase Edge Functions)
 - **Database:** Supabase Postgres (own project — NOT 2b-core)
 - **MCP Protocol:** JSON-RPC over SSE, same pattern as cloud-mcp
-- **License:** AGPL-3.0
+- **License:** MIT (temporary — final license TBD)
 - **Repo:** Gabriel-is/sentinel (GitHub personal account `github-personal`)
 
 ## Project Structure
@@ -37,18 +37,27 @@ sentinel/
 ```
 
 ## Supabase Project
-- **Create a new Supabase project** for Sentinel (free tier is fine)
-- Project name: `sentinel`
-- Region: us-east-1 (or closest)
-- After creation, note the project ref ID and set up:
+- **Project:** Sentinel by Gabriel Ziegler (standalone account, free tier)
+- **Ref:** `ewugluzfpgsonifbpeau`
+- **Region:** us-west-2
+- **URL:** `https://ewugluzfpgsonifbpeau.supabase.co`
+- To set up a new instance:
+  - Create a Supabase project (free tier)
   - `npx supabase link --project-ref <ref>`
-  - Anon key and service role key for edge function env vars
+  - Apply migrations: `npx supabase db push`
+  - Deploy: `npx supabase functions deploy mcp`
 
 ## Development
 - **CLI:** Use `npx supabase` (not bare `supabase`) — WSL requirement
-- **Edge functions:** `npx supabase functions serve mcp --no-verify-jwt` for local dev
-- **Deploy:** `npx supabase functions deploy mcp --no-verify-jwt`
+- **Edge functions (local):** `npx supabase functions serve mcp --no-verify-jwt` for local dev
+- **Deploy (production):** `npx supabase functions deploy mcp` (JWT verification ON — no `--no-verify-jwt`)
 - **Migrations:** `npx supabase db push` or run SQL directly in DataGrip/Dashboard
+
+## Security Model
+- **Auth required:** All tool calls (except `initialize` and `tools/list`) require a valid Supabase JWT via `Authorization: Bearer <token>`
+- **RLS enabled on all tables:** Reference data is read-only for authenticated users. User-scoped data (flashcards, assessments) is isolated per `auth.uid()`
+- **Service role key:** Used internally by the edge function for DB queries — never exposed to clients
+- **No anonymous access:** `user_id` columns are `NOT NULL REFERENCES auth.users(id)`
 
 ## MCP Tools to Implement
 
