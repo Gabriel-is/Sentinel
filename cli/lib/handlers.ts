@@ -1,24 +1,27 @@
+// deno-lint-ignore-file no-explicit-any
 import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
 
-export function lookup(db: DB, query: string, scope = "all"): Record<string, unknown> {
+type Row = Record<string, any>;
+
+export function lookup(db: DB, query: string, scope = "all"): Row {
   const id = query.toUpperCase().trim();
 
   // Exact ID matches
-  const fn = db.queryEntries<Record<string, unknown>>("SELECT * FROM sentinel_functions WHERE upper(id) = ?", [id]);
+  const fn = db.queryEntries<Row>("SELECT * FROM sentinel_functions WHERE upper(id) = ?", [id]);
   if (fn.length) {
-    const cats = db.queryEntries("SELECT id, name, description FROM sentinel_categories WHERE function_id = ? ORDER BY sort_order", [fn[0].id]);
+    const cats = db.queryEntries("SELECT id, name, description FROM sentinel_categories WHERE function_id = ? ORDER BY sort_order", [fn[0].id as string]);
     return { match_type: "function", function: fn[0], categories: cats };
   }
 
-  const cat = db.queryEntries("SELECT * FROM sentinel_categories WHERE upper(id) = ?", [id]);
+  const cat = db.queryEntries<Row>("SELECT * FROM sentinel_categories WHERE upper(id) = ?", [id]);
   if (cat.length) {
-    const subs = db.queryEntries("SELECT id, name, description FROM sentinel_subcategories WHERE category_id = ? ORDER BY sort_order", [cat[0].id]);
+    const subs = db.queryEntries("SELECT id, name, description FROM sentinel_subcategories WHERE category_id = ? ORDER BY sort_order", [cat[0].id as string]);
     return { match_type: "category", category: cat[0], subcategories: subs };
   }
 
-  const sub = db.queryEntries("SELECT * FROM sentinel_subcategories WHERE upper(id) = ?", [id]);
+  const sub = db.queryEntries<Row>("SELECT * FROM sentinel_subcategories WHERE upper(id) = ?", [id]);
   if (sub.length) {
-    const ctrls = db.queryEntries("SELECT id, objective_text, adoption_stages, trustworthy_principle FROM sentinel_control_objectives WHERE subcategory_id = ? ORDER BY sort_order", [sub[0].id]);
+    const ctrls = db.queryEntries("SELECT id, objective_text, adoption_stages, trustworthy_principle FROM sentinel_control_objectives WHERE subcategory_id = ? ORDER BY sort_order", [sub[0].id as string]);
     return { match_type: "subcategory", subcategory: sub[0], control_objectives: ctrls };
   }
 
@@ -39,18 +42,18 @@ export function lookup(db: DB, query: string, scope = "all"): Record<string, unk
   return { match_type: "search", query, scope, results: filtered };
 }
 
-export function explain(db: DB, topic: string, depth = "detailed"): Record<string, unknown> {
+export function explain(db: DB, topic: string, depth = "detailed"): Row {
   const upper = topic.toUpperCase().trim();
 
   const fn = db.queryEntries("SELECT * FROM sentinel_functions WHERE upper(id) = ? OR upper(name) LIKE ?", [upper, `%${upper}%`]);
   if (fn.length) {
-    const cats = db.queryEntries("SELECT id, description FROM sentinel_categories WHERE function_id = ? ORDER BY sort_order", [fn[0].id]);
+    const cats = db.queryEntries("SELECT id, description FROM sentinel_categories WHERE function_id = ? ORDER BY sort_order", [fn[0].id as string]);
     return { entity_type: "function", ...fn[0], categories: cats, depth };
   }
 
   const sub = db.queryEntries("SELECT * FROM sentinel_subcategories WHERE upper(id) = ? OR description LIKE ?", [upper, `%${topic}%`]);
   if (sub.length) {
-    const ctrls = db.queryEntries("SELECT id, objective_text, adoption_stages, trustworthy_principle, risk_statement FROM sentinel_control_objectives WHERE subcategory_id = ? ORDER BY sort_order", [sub[0].id]);
+    const ctrls = db.queryEntries("SELECT id, objective_text, adoption_stages, trustworthy_principle, risk_statement FROM sentinel_control_objectives WHERE subcategory_id = ? ORDER BY sort_order", [sub[0].id as string]);
     return { entity_type: "subcategory", ...sub[0], control_objectives: ctrls, depth };
   }
 
@@ -63,7 +66,7 @@ export function explain(db: DB, topic: string, depth = "detailed"): Record<strin
   return { entity_type: "not_found", topic, suggestion: "Try a framework ID (e.g. 'GOVERN 1.1'), term, or control ID (e.g. 'GV-1.1-001')." };
 }
 
-export function glossary(db: DB, term?: string, category?: string): Record<string, unknown> {
+export function glossary(db: DB, term?: string, category?: string): Row {
   if (!term && !category) {
     const cats = db.queryEntries<{ category: string; cnt: number }>("SELECT category, count(*) as cnt FROM sentinel_glossary GROUP BY category ORDER BY category");
     const total = db.queryEntries<{ c: number }>("SELECT count(*) as c FROM sentinel_glossary");
@@ -71,7 +74,7 @@ export function glossary(db: DB, term?: string, category?: string): Record<strin
   }
 
   let sql = "SELECT term, definition, source, related_terms, category FROM sentinel_glossary WHERE 1=1";
-  const params: unknown[] = [];
+  const params: any[] = [];
   if (term) { sql += " AND term LIKE ?"; params.push(`%${term}%`); }
   if (category) { sql += " AND category = ?"; params.push(category); }
   sql += " ORDER BY term LIMIT 15";
@@ -80,7 +83,7 @@ export function glossary(db: DB, term?: string, category?: string): Record<strin
   return { query: { term, category }, results, count: results.length };
 }
 
-export function crosswalk(db: DB, controlId: string, target: string): Record<string, unknown> {
+export function crosswalk(db: DB, controlId: string, target: string): Row {
   const results = db.queryEntries(
     "SELECT * FROM sentinel_crosswalks WHERE source_id = ? AND target_framework = ?",
     [controlId, target]
@@ -96,15 +99,16 @@ export function crosswalk(db: DB, controlId: string, target: string): Record<str
   return { source: controlId, target_framework: target, mappings: results };
 }
 
-export function assess(db: DB, content: string, inputType: string, context?: string): Record<string, unknown> {
+export function assess(db: DB, content: string, inputType: string, context?: string): Row {
   const contentLower = content.toLowerCase();
   const keywords = extractKeywords(contentLower);
 
-  const allControls = db.queryEntries<Record<string, unknown>>(
+  const allControls = db.queryEntries<Row>(
     "SELECT id, subcategory_id, objective_text, implementation_guidance, adoption_stages, risk_statement, trustworthy_principle FROM sentinel_control_objectives ORDER BY sort_order"
   );
 
-  const scored = allControls.map(ctrl => {
+  // deno-lint-ignore no-explicit-any
+  const scored = allControls.map((ctrl: any) => {
     const ctrlText = ((ctrl.objective_text || "") + " " + (ctrl.implementation_guidance || "") + " " + (ctrl.risk_statement || "")).toString().toLowerCase();
     let score = 0;
     const matched: string[] = [];
@@ -116,15 +120,15 @@ export function assess(db: DB, content: string, inputType: string, context?: str
     }
     if (inputType === "code" && ctrlText.includes("technical")) score++;
     if (inputType === "policy" && ctrlText.includes("polic")) score++;
-    return { ...ctrl, relevance_score: score, matched_keywords: matched };
+    return { id: ctrl.id, subcategory_id: ctrl.subcategory_id, objective_text: ctrl.objective_text, risk_statement: ctrl.risk_statement, trustworthy_principle: ctrl.trustworthy_principle, relevance_score: score, matched_keywords: matched };
   });
 
   const relevant = scored.filter(c => c.relevance_score > 0)
-    .sort((a, b) => (b.relevance_score as number) - (a.relevance_score as number))
+    .sort((a, b) => b.relevance_score - a.relevance_score)
     .slice(0, 25);
 
   const findings = relevant.map(ctrl => {
-    const addressed = (ctrl.matched_keywords as string[]).length >= 3;
+    const addressed = ctrl.matched_keywords.length >= 3;
     return {
       control_id: ctrl.id,
       subcategory_id: ctrl.subcategory_id,
@@ -149,7 +153,7 @@ export function assess(db: DB, content: string, inputType: string, context?: str
   };
 }
 
-export function adoptionStage(db: DB, responses: Record<string, string | number | boolean>): Record<string, unknown> {
+export function adoptionStage(db: DB, responses: Record<string, string | number | boolean>): Row {
   const dimensions: Record<string, string[]> = {
     governance: ["ai_policy_exists", "ai_roles_defined", "board_oversight", "risk_appetite_defined"],
     inventory: ["ai_inventory_complete", "risk_tiering_applied", "third_party_ai_tracked"],

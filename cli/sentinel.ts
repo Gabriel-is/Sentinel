@@ -118,10 +118,22 @@ async function main() {
         const contentType = args.type || "plan";
         let content: string;
         if (source === "-") {
-          // Read from stdin
-          const buf = new Uint8Array(1024 * 1024);
-          const n = await Deno.stdin.read(buf);
-          content = new TextDecoder().decode(buf.subarray(0, n || 0));
+          // Read from stdin — collect all chunks
+          const chunks: Uint8Array[] = [];
+          const reader = Deno.stdin.readable.getReader();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            chunks.push(value);
+          }
+          const total = chunks.reduce((s, c) => s + c.length, 0);
+          const merged = new Uint8Array(total);
+          let offset = 0;
+          for (const chunk of chunks) {
+            merged.set(chunk, offset);
+            offset += chunk.length;
+          }
+          content = new TextDecoder().decode(merged);
         } else {
           content = Deno.readTextFileSync(source);
         }

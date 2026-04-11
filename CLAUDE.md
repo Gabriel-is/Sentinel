@@ -37,12 +37,15 @@ sentinel/
 ```
 
 ## Supabase Project
-- **Create a new Supabase project** for Sentinel (free tier is fine)
-- Project name: `sentinel`
-- Region: us-east-1 (or closest)
-- After creation, note the project ref ID and set up:
+- **Project:** Sentinel by Gabriel Ziegler (standalone account, free tier)
+- **Ref:** `ewugluzfpgsonifbpeau`
+- **Region:** us-west-2
+- **URL:** `https://ewugluzfpgsonifbpeau.supabase.co`
+- To set up a new instance:
+  - Create a Supabase project (free tier)
   - `npx supabase link --project-ref <ref>`
-  - Anon key and service role key for edge function env vars
+  - Apply migrations: `npx supabase db push`
+  - Deploy: `npx supabase functions deploy mcp`
 
 ## Development
 - **CLI:** Use `npx supabase` (not bare `supabase`) — WSL requirement
