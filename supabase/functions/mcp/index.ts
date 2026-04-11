@@ -707,15 +707,171 @@ async function handleProgress(
   };
 }
 
-async function handleAssess(input: Record<string, unknown>) {
-  const { type } = input;
-  // TODO: Match content against control objectives, return findings
-  return {
-    type,
-    controls_checked: 0,
-    findings: [],
-    message: "Not yet implemented — need control data seeded first",
+async function handleAssess(
+  input: Record<string, unknown>,
+  supabase: ReturnType<typeof createClient>
+) {
+  const { content, type: inputType, context } = input as {
+    content: string;
+    type: string;
+    context?: string;
   };
+
+  // Extract keywords from the input content
+  const contentLower = content.toLowerCase();
+  const keywords = extractKeywords(contentLower);
+
+  // Get all controls with their subcategory context
+  const { data: allControls, error } = await supabase
+    .from("sentinel_control_objectives")
+    .select(
+      "id, subcategory_id, objective_text, implementation_guidance, adoption_stages, risk_statement, trustworthy_principle"
+    )
+    .order("sort_order");
+
+  if (error) return { error: error.message };
+  if (!allControls?.length) return { error: "No controls loaded" };
+
+  // Score each control against the content
+  const scored = allControls.map(
+    (ctrl: {
+      id: string;
+      subcategory_id: string;
+      objective_text: string;
+      implementation_guidance: string | null;
+      adoption_stages: string[];
+      risk_statement: string | null;
+      trustworthy_principle: string | null;
+    }) => {
+      const ctrlText = (
+        ctrl.objective_text +
+        " " +
+        (ctrl.implementation_guidance || "") +
+        " " +
+        (ctrl.risk_statement || "")
+      ).toLowerCase();
+
+      let score = 0;
+      const matchedKeywords: string[] = [];
+
+      for (const kw of keywords) {
+        if (ctrlText.includes(kw)) {
+          score += kw.length > 5 ? 2 : 1; // Longer keywords score higher
+          matchedKeywords.push(kw);
+        }
+      }
+
+      // Boost score for input type relevance
+      if (inputType === "code" && ctrlText.includes("technical")) score += 1;
+      if (inputType === "policy" && ctrlText.includes("polic")) score += 1;
+      if (inputType === "architecture" && ctrlText.includes("design")) score += 1;
+      if (inputType === "plan" && ctrlText.includes("plan")) score += 1;
+
+      return { ...ctrl, relevance_score: score, matched_keywords: matchedKeywords };
+    }
+  );
+
+  // Get top relevant controls (score > 0)
+  const relevant = scored
+    .filter((c: { relevance_score: number }) => c.relevance_score > 0)
+    .sort(
+      (a: { relevance_score: number }, b: { relevance_score: number }) =>
+        b.relevance_score - a.relevance_score
+    )
+    .slice(0, 25);
+
+  // Classify findings
+  const findings = relevant.map(
+    (ctrl: {
+      id: string;
+      subcategory_id: string;
+      objective_text: string;
+      relevance_score: number;
+      matched_keywords: string[];
+      risk_statement: string | null;
+      trustworthy_principle: string | null;
+    }) => {
+      // Check if the content addresses the control (simple heuristic)
+      const addressed = ctrl.matched_keywords.length >= 3;
+      return {
+        control_id: ctrl.id,
+        subcategory_id: ctrl.subcategory_id,
+        objective: ctrl.objective_text,
+        status: addressed ? "partial" as const : "gap" as const,
+        relevance_score: ctrl.relevance_score,
+        matched_keywords: ctrl.matched_keywords,
+        risk_statement: ctrl.risk_statement,
+        trustworthy_principle: ctrl.trustworthy_principle,
+        recommendation: addressed
+          ? "Partially addressed. Review control objective for completeness."
+          : "Gap identified. This control is relevant but not addressed in the content.",
+      };
+    }
+  );
+
+  const gaps = findings.filter(
+    (f: { status: string }) => f.status === "gap"
+  ).length;
+  const partial = findings.filter(
+    (f: { status: string }) => f.status === "partial"
+  ).length;
+
+  // Group by trustworthy principle
+  const byPrinciple: Record<string, number> = {};
+  findings.forEach(
+    (f: { trustworthy_principle: string | null; status: string }) => {
+      const p = f.trustworthy_principle || "unclassified";
+      if (f.status === "gap") byPrinciple[p] = (byPrinciple[p] || 0) + 1;
+    }
+  );
+
+  return {
+    input_type: inputType,
+    context: context || null,
+    controls_assessed: allControls.length,
+    relevant_controls: findings.length,
+    gaps,
+    partial,
+    gap_by_principle: byPrinciple,
+    overall_score:
+      findings.length > 0
+        ? Math.round((partial / findings.length) * 100)
+        : 100,
+    findings,
+    keywords_extracted: keywords.slice(0, 20),
+  };
+}
+
+function extractKeywords(text: string): string[] {
+  const stopWords = new Set([
+    "the", "a", "an", "is", "are", "was", "were", "be", "been", "being",
+    "have", "has", "had", "do", "does", "did", "will", "would", "could",
+    "should", "may", "might", "shall", "can", "need", "dare", "ought",
+    "used", "to", "of", "in", "for", "on", "with", "at", "by", "from",
+    "as", "into", "through", "during", "before", "after", "above",
+    "below", "between", "out", "off", "over", "under", "again", "further",
+    "then", "once", "here", "there", "when", "where", "why", "how", "all",
+    "each", "every", "both", "few", "more", "most", "other", "some",
+    "such", "no", "nor", "not", "only", "own", "same", "so", "than",
+    "too", "very", "just", "because", "but", "and", "or", "if", "while",
+    "that", "this", "these", "those", "it", "its", "we", "our", "they",
+    "their", "what", "which", "who", "whom", "i", "me", "my", "he", "she",
+  ]);
+
+  const words = text
+    .replace(/[^a-z0-9\s-]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w.length > 2 && !stopWords.has(w));
+
+  // Count frequency
+  const freq: Record<string, number> = {};
+  words.forEach((w) => (freq[w] = (freq[w] || 0) + 1));
+
+  // Return unique keywords sorted by frequency
+  return Object.entries(freq)
+    .sort(([, a], [, b]) => b - a)
+    .map(([word]) => word)
+    .slice(0, 50);
 }
 
 async function handleCrosswalk(
@@ -735,10 +891,127 @@ async function handleCrosswalk(
   return { source: control_id, target_framework: target, mappings: data };
 }
 
-async function handleAdoptionStage(input: Record<string, unknown>) {
-  const { responses } = input;
-  // TODO: Score responses against adoption stage criteria
-  return { stage: "Not yet implemented", applicable_controls: [], responses };
+async function handleAdoptionStage(
+  input: Record<string, unknown>,
+  supabase: ReturnType<typeof createClient>
+) {
+  const { responses } = input as {
+    responses: Record<string, string | number | boolean>;
+  };
+
+  // Adoption stage questionnaire scoring
+  // Questions map to maturity dimensions; responses are scored 0-3
+  const dimensions: Record<string, string[]> = {
+    governance: [
+      "ai_policy_exists",
+      "ai_roles_defined",
+      "board_oversight",
+      "risk_appetite_defined",
+    ],
+    inventory: [
+      "ai_inventory_complete",
+      "risk_tiering_applied",
+      "third_party_ai_tracked",
+    ],
+    risk_management: [
+      "risk_assessment_process",
+      "model_validation_independent",
+      "incident_response_defined",
+    ],
+    monitoring: [
+      "performance_monitoring_active",
+      "bias_monitoring_active",
+      "drift_detection_deployed",
+    ],
+    culture: [
+      "ai_training_program",
+      "ethics_framework",
+      "diverse_teams",
+    ],
+  };
+
+  const scores: Record<string, number> = {};
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  for (const [dim, questions] of Object.entries(dimensions)) {
+    let dimScore = 0;
+    let dimCount = 0;
+    for (const q of questions) {
+      if (q in responses) {
+        const val = responses[q];
+        const numVal =
+          typeof val === "boolean"
+            ? val
+              ? 3
+              : 0
+            : typeof val === "number"
+              ? Math.min(3, Math.max(0, val))
+              : val === "yes"
+                ? 3
+                : val === "partial"
+                  ? 1
+                  : 0;
+        dimScore += numVal;
+        dimCount++;
+      }
+    }
+    scores[dim] = dimCount > 0 ? dimScore / (dimCount * 3) : 0;
+    totalScore += dimScore;
+    totalQuestions += dimCount;
+  }
+
+  const overallScore =
+    totalQuestions > 0 ? totalScore / (totalQuestions * 3) : 0;
+
+  // Determine stage
+  let stage: string;
+  let stageId: string;
+  if (overallScore < 0.25) {
+    stage = "Scoping";
+    stageId = "scoping";
+  } else if (overallScore < 0.5) {
+    stage = "Minimum Viable";
+    stageId = "minimum_viable";
+  } else if (overallScore < 0.75) {
+    stage = "Scaling";
+    stageId = "scaling";
+  } else {
+    stage = "Full Implementation";
+    stageId = "full_implementation";
+  }
+
+  // Get controls applicable to this stage and the next
+  const { data: applicableControls } = await supabase
+    .from("sentinel_control_objectives")
+    .select("id, subcategory_id, objective_text, adoption_stages, trustworthy_principle")
+    .contains("adoption_stages", [stageId])
+    .order("sort_order")
+    .limit(30);
+
+  // Identify weak dimensions for targeted recommendations
+  const weakDimensions = Object.entries(scores)
+    .filter(([, score]) => score < 0.5)
+    .sort(([, a], [, b]) => a - b)
+    .map(([dim]) => dim);
+
+  return {
+    stage,
+    stage_id: stageId,
+    overall_score: Math.round(overallScore * 100),
+    dimension_scores: Object.fromEntries(
+      Object.entries(scores).map(([k, v]) => [k, Math.round(v * 100)])
+    ),
+    weak_dimensions: weakDimensions,
+    applicable_controls_count: applicableControls?.length || 0,
+    applicable_controls: applicableControls || [],
+    recommendations:
+      weakDimensions.length > 0
+        ? `Focus on: ${weakDimensions.join(", ")}. These dimensions scored below 50% maturity.`
+        : "All dimensions are progressing well. Continue toward full implementation.",
+    questionnaire_note:
+      "Pass responses as key-value pairs. Keys: ai_policy_exists, ai_roles_defined, board_oversight, risk_appetite_defined, ai_inventory_complete, risk_tiering_applied, third_party_ai_tracked, risk_assessment_process, model_validation_independent, incident_response_defined, performance_monitoring_active, bias_monitoring_active, drift_detection_deployed, ai_training_program, ethics_framework, diverse_teams. Values: true/false, yes/partial/no, or 0-3.",
+  };
 }
 
 // ── MCP Protocol Handler ─────────────────────────────────────
@@ -768,7 +1041,7 @@ Deno.serve(async (req) => {
     return jsonRpcResult(id, {
       protocolVersion: "2024-11-05",
       capabilities: { tools: {} },
-      serverInfo: { name: "sentinel", version: "0.1.0" },
+      serverInfo: { name: "sentinel", version: "0.3.0" },
     });
   }
 
