@@ -87,7 +87,7 @@ CREATE INDEX idx_glossary_term ON sentinel_glossary (term);
 
 CREATE TABLE sentinel_flashcards (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID,                           -- nullable for anonymous / single-user
+  user_id UUID NOT NULL REFERENCES auth.users(id),
   card_type TEXT NOT NULL,                -- 'term', 'control', 'function', 'scenario', 'acronym'
   front TEXT NOT NULL,                    -- Question / prompt
   back TEXT NOT NULL,                     -- Answer
@@ -111,7 +111,7 @@ CREATE INDEX idx_flashcards_type ON sentinel_flashcards (card_type);
 
 CREATE TABLE sentinel_assessments (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  user_id UUID,
+  user_id UUID NOT NULL REFERENCES auth.users(id),
   title TEXT,                             -- Optional name for the assessment
   input_type TEXT NOT NULL,               -- 'plan', 'architecture', 'code', 'policy'
   input_summary TEXT NOT NULL,            -- Brief description of what was assessed
@@ -153,34 +153,60 @@ CREATE INDEX idx_crosswalks_target ON sentinel_crosswalks (target_framework, tar
 -- ============================================================
 
 CREATE OR REPLACE VIEW sentinel_search AS
-  SELECT 
+  SELECT
     id, 'function' AS entity_type, name AS title, description AS content,
     to_tsvector('english', name || ' ' || description) AS search_vector
   FROM sentinel_functions
   UNION ALL
-  SELECT 
+  SELECT
     id, 'category', name, description,
     to_tsvector('english', id || ' ' || name || ' ' || description)
   FROM sentinel_categories
   UNION ALL
-  SELECT 
+  SELECT
     id, 'subcategory', name, description,
     to_tsvector('english', id || ' ' || name || ' ' || description)
   FROM sentinel_subcategories
   UNION ALL
-  SELECT 
+  SELECT
     id, 'control', id || ': ' || LEFT(objective_text, 80), objective_text,
     to_tsvector('english', id || ' ' || objective_text || ' ' || COALESCE(implementation_guidance, '') || ' ' || COALESCE(risk_statement, ''))
   FROM sentinel_control_objectives
   UNION ALL
-  SELECT 
+  SELECT
     id::TEXT, 'glossary', term, definition,
     search_vector
   FROM sentinel_glossary;
 
 -- ============================================================
--- RLS (disabled for now — single-user / service-key access)
+-- RLS — enabled on all tables
 -- ============================================================
--- Enable RLS on tables if/when multi-user support is needed
--- ALTER TABLE sentinel_flashcards ENABLE ROW LEVEL SECURITY;
--- ALTER TABLE sentinel_assessments ENABLE ROW LEVEL SECURITY;
+
+-- User-scoped tables: users can only access their own data
+ALTER TABLE sentinel_flashcards ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sentinel_assessments ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY flashcards_user_policy ON sentinel_flashcards
+  FOR ALL USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY assessments_user_policy ON sentinel_assessments
+  FOR ALL USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Reference tables: read-only for authenticated users
+ALTER TABLE sentinel_functions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sentinel_categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sentinel_subcategories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sentinel_control_objectives ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sentinel_trustworthy_characteristics ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sentinel_glossary ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sentinel_crosswalks ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY functions_read ON sentinel_functions FOR SELECT TO authenticated USING (true);
+CREATE POLICY categories_read ON sentinel_categories FOR SELECT TO authenticated USING (true);
+CREATE POLICY subcategories_read ON sentinel_subcategories FOR SELECT TO authenticated USING (true);
+CREATE POLICY controls_read ON sentinel_control_objectives FOR SELECT TO authenticated USING (true);
+CREATE POLICY characteristics_read ON sentinel_trustworthy_characteristics FOR SELECT TO authenticated USING (true);
+CREATE POLICY glossary_read ON sentinel_glossary FOR SELECT TO authenticated USING (true);
+CREATE POLICY crosswalks_read ON sentinel_crosswalks FOR SELECT TO authenticated USING (true);
