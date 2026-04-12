@@ -519,6 +519,86 @@ async function handleGlossary(
   };
 }
 
+async function seedFlashcards(
+  supabase: ReturnType<typeof createClient>,
+  userId: string
+): Promise<void> {
+  // Build seed cards from the database content
+  const seeds: Array<{ user_id: string; card_type: string; front: string; back: string; source_id: string; source_table: string }> = [];
+
+  // Term cards from glossary (top terms, ordered by term for determinism)
+  const { data: terms } = await supabase
+    .from("sentinel_glossary")
+    .select("id, term, definition, source")
+    .order("term")
+    .limit(30);
+  if (terms) {
+    for (const t of terms) {
+      seeds.push({
+        user_id: userId, card_type: "term",
+        front: `What is "${t.term}" in the context of ${t.source || "AI risk management"}?`,
+        back: t.definition, source_id: t.id, source_table: "sentinel_glossary",
+      });
+    }
+  }
+
+  // Function cards
+  const { data: fns } = await supabase.from("sentinel_functions").select("id, name, description");
+  if (fns) {
+    for (const fn of fns) {
+      seeds.push({
+        user_id: userId, card_type: "term",
+        front: `What is the ${fn.name} function in the NIST AI RMF?`,
+        back: fn.description, source_id: fn.id, source_table: "sentinel_functions",
+      });
+    }
+  }
+
+  // Scenario cards from controls with risk statements
+  const { data: ctrls } = await supabase
+    .from("sentinel_control_objectives")
+    .select("id, subcategory_id, objective_text, risk_statement")
+    .not("risk_statement", "is", null)
+    .limit(25);
+  if (ctrls) {
+    for (const c of ctrls) {
+      seeds.push({
+        user_id: userId, card_type: "scenario",
+        front: `Scenario: ${c.risk_statement} Which control addresses this?`,
+        back: `${c.id} (${c.subcategory_id}): ${c.objective_text}`,
+        source_id: c.id, source_table: "sentinel_control_objectives",
+      });
+    }
+  }
+
+  // Control ID cards
+  const { data: keyCtrls } = await supabase
+    .from("sentinel_control_objectives")
+    .select("id, subcategory_id, objective_text")
+    .in("id", ["GV-1.1-001", "GV-1.2-001", "GV-1.6-001", "GV-2.1-001", "MP-1.1-001",
+      "MS-2.5-001", "MS-2.11-001", "MS-2.6-001", "MG-1.1-001", "MG-2.4-001",
+      "GV-1.7-001", "GV-1.3-001", "MS-2.7-001", "MS-2.10-001", "MP-3.2-001"]);
+  if (keyCtrls) {
+    for (const c of keyCtrls) {
+      seeds.push({
+        user_id: userId, card_type: "control",
+        front: `What control objective does ${c.id} (under ${c.subcategory_id}) address?`,
+        back: c.objective_text, source_id: c.id, source_table: "sentinel_control_objectives",
+      });
+    }
+  }
+
+  // Insert in batches of 25, skip duplicates via onConflict
+  for (let i = 0; i < seeds.length; i += 25) {
+    const { error } = await supabase
+      .from("sentinel_flashcards")
+      .upsert(seeds.slice(i, i + 25), { onConflict: "id", ignoreDuplicates: true });
+    if (error) {
+      console.error("Flashcard seed batch failed:", error.message);
+    }
+  }
+}
+
 async function handleQuiz(
   input: Record<string, unknown>,
   supabase: ReturnType<typeof createClient>,
@@ -529,6 +609,16 @@ async function handleQuiz(
     type?: string;
     difficulty?: number;
   };
+
+  // Auto-seed flashcards for new users (null count = error, treat as no cards)
+  const { count: cardCount } = await supabase
+    .from("sentinel_flashcards")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId);
+
+  if (!cardCount) {
+    await seedFlashcards(supabase, userId);
+  }
 
   // Check for existing flashcard due for review
   const { data: dueCard } = await supabase
