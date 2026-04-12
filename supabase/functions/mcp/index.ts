@@ -6,7 +6,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, x-sentinel-token",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
@@ -31,34 +31,42 @@ function jsonRpcResult(id: string | number | null, result: unknown) {
 // ── Auth ──────────────────────────────────────────────────────
 
 /**
- * Verify the caller's JWT and return their user ID.
- * Uses Supabase's built-in auth — the caller must pass
- * `Authorization: Bearer <access_token>` from a Supabase auth session.
+ * Verify the caller's user token and return their user ID.
  *
- * The edge function itself uses the service role key for DB access,
- * but the *caller* must prove they are a real authenticated user.
+ * Auth architecture (4 layers):
+ *   Layer 1: HTTPS (Supabase-managed TLS)
+ *   Layer 2: Supabase gateway verify_jwt — checks Authorization header
+ *            contains a valid HS256 JWT (the anon key). This is the firewall
+ *            that blocks garbage requests before they reach our code.
+ *   Layer 3: This function — reads the user's ES256 auth token from
+ *            X-Sentinel-Token header, validates via getUser() against
+ *            the Supabase Auth server. This is the real auth.
+ *   Layer 4: RLS policies on all tables.
+ *
+ * Why two headers:
+ *   - Authorization: Bearer <anon_key> — satisfies the gateway (HS256)
+ *   - X-Sentinel-Token: <user_jwt> — our app-level auth (ES256)
+ *   The gateway can't verify ES256 user tokens, so we split the concerns.
  */
 async function authenticateRequest(
   req: Request
 ): Promise<{ userId: string } | { error: string }> {
-  const authHeader = req.headers.get("authorization");
-  if (!authHeader?.startsWith("Bearer ")) {
-    return { error: "Missing or malformed Authorization header" };
+  // User token comes from X-Sentinel-Token header
+  const userToken = req.headers.get("x-sentinel-token");
+  if (!userToken) {
+    return { error: "Missing X-Sentinel-Token header. Pass your Supabase auth JWT in this header." };
   }
 
-  const token = authHeader.replace("Bearer ", "");
-
-  // Create a client with the user's token to verify it
   const supabaseAuth = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-    { global: { headers: { Authorization: `Bearer ${token}` } } }
+    { global: { headers: { Authorization: `Bearer ${userToken}` } } }
   );
 
   const {
     data: { user },
     error,
-  } = await supabaseAuth.auth.getUser(token);
+  } = await supabaseAuth.auth.getUser(userToken);
 
   if (error || !user) {
     return { error: "Invalid or expired token" };
