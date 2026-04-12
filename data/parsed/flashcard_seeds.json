@@ -1,0 +1,599 @@
+{
+  "cards": [
+    {
+      "card_type": "term",
+      "front": "What is \"AI Risk Management Framework\" in the context of NIST AI RMF?",
+      "back": "A voluntary framework published by NIST (AI 100-1) that provides organizations with a structured approach to managing risks associated with AI systems throughout their lifecycle. It is organized around four core functions: Govern, Map, Measure, and Manage.",
+      "source_id": "AI Risk Management Framework",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Trustworthiness\" in the context of NIST AI RMF?",
+      "back": "A composite quality of AI systems encompassing characteristics such as validity, reliability, safety, security, resilience, accountability, transparency, explainability, interpretability, privacy, and fairness. The NIST AI RMF treats trustworthiness as the overarching goal of AI risk management.",
+      "source_id": "Trustworthiness",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Bias (harmful)\" in the context of NIST AI RMF?",
+      "back": "Systematic errors in AI system outputs that create unfair outcomes for particular groups or individuals. Harmful bias can originate from training data, algorithm design, or deployment context, and may be statistical, cognitive, or systemic in nature.",
+      "source_id": "Bias (harmful)",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Fairness\" in the context of NIST AI RMF?",
+      "back": "The principle that AI systems should not produce unjust or prejudicial outcomes for different demographic groups or individuals. Fairness encompasses equitable treatment, equalized opportunity, and the mitigation of harmful bias throughout the AI lifecycle.",
+      "source_id": "Fairness",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Transparency\" in the context of NIST AI RMF?",
+      "back": "The extent to which information about an AI system and its outputs is available to individuals interacting with it or affected by it. Transparency supports accountability and helps stakeholders understand how decisions are made.",
+      "source_id": "Transparency",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Accountability\" in the context of NIST AI RMF?",
+      "back": "The principle that organizations and individuals responsible for AI systems are answerable for their functioning, outcomes, and compliance with applicable norms. Accountability requires clear roles, governance structures, and mechanisms for redress.",
+      "source_id": "Accountability",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Explainability\" in the context of NIST AI RMF?",
+      "back": "The ability to articulate the reasons behind an AI system's outputs or decisions in terms understandable to relevant stakeholders. Explainability is distinct from interpretability in that it focuses on post-hoc justification rather than inherent model transparency.",
+      "source_id": "Explainability",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Risk tolerance\" in the context of NIST AI RMF?",
+      "back": "The level and type of risk an organization is willing to accept in pursuit of its objectives. Risk tolerance defines the boundaries within which AI systems may operate and informs decisions about risk treatment.",
+      "source_id": "Risk tolerance",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Residual risk\" in the context of NIST AI RMF?",
+      "back": "The risk that remains after risk treatment measures have been applied. Residual risk must be documented, monitored, and accepted within the organization's risk tolerance, as no treatment can eliminate all risk.",
+      "source_id": "Residual risk",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"TEVV\" in the context of NIST AI RMF?",
+      "back": "Testing, Evaluation, Validation, and Verification. A comprehensive set of processes used throughout the AI lifecycle to confirm that an AI system meets its requirements, performs as intended, and produces trustworthy outputs under various conditions.",
+      "source_id": "TEVV",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Model validation\" in the context of SR 11-7 / OCC 2011-12?",
+      "back": "The independent assessment of a model's conceptual soundness, implementation correctness, and ongoing performance to ensure it is fit for its intended purpose. Validation is a core component of model risk management in financial services.",
+      "source_id": "Model validation",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Third-party risk\" in the context of NIST AI RMF?",
+      "back": "The risks introduced when an organization relies on external vendors, partners, or service providers for AI system components, data, or services. Third-party risk management requires due diligence, contractual controls, and ongoing monitoring.",
+      "source_id": "Third-party risk",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Adoption stage\" in the context of FS AI RMF?",
+      "back": "In the FS AI RMF, one of three maturity levels (Early, Expanding, Mature) that characterizes an organization's current state of AI adoption. The applicable adoption stage determines which control objectives are relevant and the expected rigor of implementation.",
+      "source_id": "Adoption stage",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"SIFMU\" in the context of Dodd-Frank Act / Domain Knowledge?",
+      "back": "Systemically Important Financial Market Utility. A financial market infrastructure designated by the Financial Stability Oversight Council (FSOC) whose failure could pose systemic risk to the US financial system. SIFMUs face heightened supervisory expectations for risk management, including AI risk.",
+      "source_id": "SIFMU",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"SR 11-7\" in the context of Federal Reserve?",
+      "back": "Federal Reserve Supervisory Guidance on Model Risk Management, issued in 2011. SR 11-7 establishes expectations for model development, validation, and governance at banking organizations and remains the foundational regulatory reference for model risk management in US financial services.",
+      "source_id": "SR 11-7",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"OCC\" in the context of Domain Knowledge?",
+      "back": "Office of the Comptroller of the Currency. An independent bureau of the US Treasury Department that charters, regulates, and supervises national banks and federal savings associations. The OCC has issued parallel model risk guidance (OCC 2011-12) and is actively engaged in AI risk policy.",
+      "source_id": "OCC",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Model Risk Management\" in the context of SR 11-7 / OCC 2011-12?",
+      "back": "The organizational framework of policies, processes, and controls for identifying, measuring, monitoring, and controlling model risk across the enterprise. In financial services, MRM programs are required by SR 11-7 and OCC 2011-12 and are increasingly expected to cover AI/ML models.",
+      "source_id": "Model Risk Management",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Three lines of defense\" in the context of Domain Knowledge?",
+      "back": "A governance model in which the first line (business/operations) owns and manages risk, the second line (risk management and compliance) provides independent oversight and challenge, and the third line (internal audit) provides independent assurance. This model is foundational to financial services risk governance.",
+      "source_id": "Three lines of defense",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Effective challenge\" in the context of SR 11-7?",
+      "back": "Critical analysis and questioning of a model's design, assumptions, outputs, and limitations by qualified individuals who are independent of the model development process. Effective challenge is a core requirement of SR 11-7 and ensures that model risk is surfaced and addressed.",
+      "source_id": "Effective challenge",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Stress testing\" in the context of Domain Knowledge?",
+      "back": "A risk analysis technique that evaluates how a system, model, or portfolio performs under extreme but plausible adverse scenarios. For AI systems, stress testing includes evaluating model behavior under distribution shifts, adversarial inputs, and degraded data quality.",
+      "source_id": "Stress testing",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Data governance\" in the context of Domain Knowledge?",
+      "back": "The framework of policies, standards, processes, and organizational structures that ensure data is managed as a strategic asset with appropriate quality, security, privacy, and compliance controls throughout its lifecycle.",
+      "source_id": "Data governance",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Data lineage\" in the context of Domain Knowledge?",
+      "back": "The documented history of data as it flows through collection, transformation, storage, and consumption stages. Data lineage enables organizations to trace AI model inputs back to their origins for auditability, debugging, and regulatory compliance.",
+      "source_id": "Data lineage",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Concept drift\" in the context of Domain Knowledge?",
+      "back": "A change in the statistical relationship between input features and the target variable over time, causing a model's learned patterns to become outdated. Concept drift degrades model performance and requires ongoing monitoring and retraining strategies.",
+      "source_id": "Concept drift",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Back-testing\" in the context of Domain Knowledge?",
+      "back": "A validation technique that evaluates a model's predictions against actual observed outcomes using historical data. Back-testing assesses whether a model would have performed acceptably in the past and is a standard requirement in financial model validation.",
+      "source_id": "Back-testing",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Large language model\" in the context of Domain Knowledge?",
+      "back": "A neural network trained on massive text corpora to understand and generate human language, typically using transformer architectures with billions of parameters. LLMs power conversational AI, text generation, and many generative AI applications but introduce unique risks including hallucination and prompt injection.",
+      "source_id": "Large language model",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Generative AI\" in the context of NIST AI 600-1?",
+      "back": "AI systems capable of creating new content such as text, images, audio, code, or synthetic data based on patterns learned from training data. Generative AI introduces novel risks around authenticity, intellectual property, and the propagation of misinformation.",
+      "source_id": "Generative AI",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Hallucination\" in the context of NIST AI 600-1?",
+      "back": "The generation of outputs by an AI system that are syntactically plausible but factually incorrect, unsupported, or fabricated. Hallucination is a significant risk in generative AI and large language models, particularly in regulated domains where accuracy is critical.",
+      "source_id": "Hallucination",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Alignment\" in the context of Domain Knowledge?",
+      "back": "The degree to which an AI system's objectives, behaviors, and outputs are consistent with human values, intentions, and established norms. Alignment research addresses how to ensure AI systems act in accordance with their intended purpose and do not pursue unintended goals.",
+      "source_id": "Alignment",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Guardrails\" in the context of Domain Knowledge?",
+      "back": "Technical and procedural safeguards that constrain AI system behavior within acceptable boundaries, preventing harmful, off-topic, or policy-violating outputs. Guardrails include input filtering, output validation, content policies, and automated monitoring.",
+      "source_id": "Guardrails",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is \"Agentic AI\" in the context of NIST AI 600-1?",
+      "back": "AI systems that can autonomously plan, reason, use tools, and take multi-step actions to achieve goals with minimal human intervention. Agentic AI introduces heightened risks around controllability, accountability, and unintended consequences that require robust human oversight frameworks.",
+      "source_id": "Agentic AI",
+      "source_table": "sentinel_glossary"
+    },
+    {
+      "card_type": "term",
+      "front": "What is the Govern function in the NIST AI RMF?",
+      "back": "Policies, processes, procedures, and practices across the organization related to the mapping, measuring, and managing of AI risks are in place, transparent, and implemented effectively.",
+      "source_id": "GOVERN",
+      "source_table": "sentinel_functions"
+    },
+    {
+      "card_type": "term",
+      "front": "What is the Map function in the NIST AI RMF?",
+      "back": "Context is recognized and risks related to context are identified.",
+      "source_id": "MAP",
+      "source_table": "sentinel_functions"
+    },
+    {
+      "card_type": "term",
+      "front": "What is the Measure function in the NIST AI RMF?",
+      "back": "Identified and measured AI risks are analyzed and tracked.",
+      "source_id": "MEASURE",
+      "source_table": "sentinel_functions"
+    },
+    {
+      "card_type": "term",
+      "front": "What is the Manage function in the NIST AI RMF?",
+      "back": "AI risks are prioritized and acted upon.",
+      "source_id": "MANAGE",
+      "source_table": "sentinel_functions"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Failing to incorporate external learnings leads to repeated issues and demonstrates weak continuous improvement to regulators. Which control objective addresses this risk?",
+      "back": "GV-4.3-003 (GOVERN 4.3): Lessons learned from regulatory examinations, audit findings, and industry events are systematically incorporated into the AI governance framework.",
+      "source_id": "GV-4.3-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: AI systems without structured monitoring frameworks operate on faith rather than evidence, accumulating undetected risk. Which control objective addresses this risk?",
+      "back": "MS-1.1-001 (MEASURE 1.1): The organization establishes a measurement and monitoring framework for AI systems that defines metrics, thresholds, frequency, and escalation procedures aligned with model risk management expectations.",
+      "source_id": "MS-1.1-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Financial institutions without an AI ethics framework face reputational risk and regulatory scrutiny, particularly from the CFPB on algorithmic fairness. Which control objective addresses this risk?",
+      "back": "GV-1.4-001 (GOVERN 1.4): The organization establishes an AI ethics framework that addresses fairness, transparency, accountability, and consumer protection in alignment with regulatory expectations for financial institutions.",
+      "source_id": "GV-1.4-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Models that are retrained too infrequently become stale, while models retrained too frequently may introduce instability and bypass governance controls. Which control objective addresses this risk?",
+      "back": "MS-2.10-003 (MEASURE 2.10): The organization tracks and manages AI model retraining frequency and deployment velocity, ensuring models remain current while maintaining stability and control.",
+      "source_id": "MS-2.10-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Untested DR plans for AI systems may fail in actual disasters, leaving critical AI capabilities unrecoverable within required timeframes. Which control objective addresses this risk?",
+      "back": "MG-3.2-003 (MANAGE 3.2): DR testing for AI systems validates end-to-end recovery, including model serving capability, data pipeline restoration, monitoring reactivation, and integration with downstream systems.",
+      "source_id": "MG-3.2-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: AI systems with compromised confidentiality, integrity, or availability can produce manipulated outputs, be stolen by competitors, or deny service to customers. Which control objective addresses this risk?",
+      "back": "MS-2.7-002 (MEASURE 2.7): Security controls for AI systems protect model confidentiality, integrity, and availability, including secure model storage, access controls, and tamper detection.",
+      "source_id": "MS-2.7-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Financial institutions that deploy AI without considering inclusion may inadvertently widen the digital divide while missing opportunities to serve underbanked populations. Which control objective addresses this risk?",
+      "back": "MG-4.3-002 (MANAGE 4.3): The organization evaluates AI's impact on financial inclusion objectives and CRA commitments, actively seeking opportunities where AI can expand access to financial services for underserved communities.",
+      "source_id": "MG-4.3-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Users unaware of AI system limitations may rely on outputs in inappropriate contexts, leading to poor decisions and consumer harm. Which control objective addresses this risk?",
+      "back": "MP-2.3-001 (MAP 2.3): The organization identifies and assesses AI-specific scientific and technical limitations for each system, including model uncertainty, known failure modes, and conditions under which the model should not be relied upon.",
+      "source_id": "MP-2.3-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Ad hoc retraining without defined criteria and governance leads to either stale models or unstable models with insufficient quality assurance. Which control objective addresses this risk?",
+      "back": "MG-2.3-001 (MANAGE 2.3): The organization establishes criteria and processes for AI model retraining, ensuring models remain current while maintaining governance controls over the retraining lifecycle.",
+      "source_id": "MG-2.3-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Developing AI without stakeholder engagement risks building systems that fail to meet user needs, exacerbate inequities, or surprise regulators. Which control objective addresses this risk?",
+      "back": "GV-5.1-001 (GOVERN 5.1): The organization engages relevant stakeholders \u2014 including consumers, community groups, employees, and regulators \u2014 in the design and oversight of AI systems that significantly affect them.",
+      "source_id": "GV-5.1-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Excluding AI from the audit universe leaves governance effectiveness unassured and may result in regulatory criticism of audit coverage. Which control objective addresses this risk?",
+      "back": "GV-2.3-003 (GOVERN 2.3): Internal audit includes AI governance and model risk management within its audit universe, with risk-based audit planning that covers the full AI lifecycle.",
+      "source_id": "GV-2.3-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: AI operational losses not captured in the enterprise loss database distort the organization's understanding of total operational risk exposure. Which control objective addresses this risk?",
+      "back": "MG-3.1-004 (MANAGE 3.1): The organization maintains a register of AI-related operational losses and near-misses, integrating AI events into the enterprise operational risk loss database for comprehensive risk assessment.",
+      "source_id": "MG-3.1-004",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Deploying new models without production comparison risks degrading performance based on offline testing that may not reflect real-world conditions. Which control objective addresses this risk?",
+      "back": "MG-2.2-002 (MANAGE 2.2): Post-deployment monitoring includes A/B testing or champion-challenger comparison where feasible, measuring the new model's performance against the incumbent in production conditions.",
+      "source_id": "MG-2.2-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Informal decommissioning risks data loss, orphaned dependencies, regulatory record-keeping violations, and loss of institutional knowledge. Which control objective addresses this risk?",
+      "back": "MG-2.4-001 (MANAGE 2.4): The organization establishes AI model decommissioning procedures that ensure safe transition, data preservation for regulatory purposes, and knowledge retention.",
+      "source_id": "MG-2.4-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Deploying AI without rigorous cost-benefit analysis may result in investments that increase risk without proportionate business value. Which control objective addresses this risk?",
+      "back": "MP-1.6-001 (MAP 1.6): The organization evaluates and documents the benefits, costs, and risks of AI systems compared to non-AI alternatives and the status quo, supporting informed go/no-go decisions.",
+      "source_id": "MP-1.6-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Without peer benchmarking, the organization cannot calibrate its AI governance investment or anticipate regulatory expectations informed by peer practices. Which control objective addresses this risk?",
+      "back": "MG-4.2-003 (MANAGE 4.2): The organization benchmarks its AI governance practices against peer institutions and industry leaders, identifying areas where it leads, lags, or differs from market practice.",
+      "source_id": "MG-4.2-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Credit risk AI models without uncertainty quantification may understate capital requirements, creating safety and soundness concerns. Which control objective addresses this risk?",
+      "back": "MS-2.3-002 (MEASURE 2.3): For AI used in credit risk quantification (PD, LGD, EAD models), uncertainty measures support capital adequacy assessments and stress testing with quantified model risk adjustments.",
+      "source_id": "MS-2.3-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Human oversight that degrades into rubber-stamping provides false assurance while offering no actual risk mitigation. Which control objective addresses this risk?",
+      "back": "MP-4.2-003 (MAP 4.2): The organization monitors the quality and consistency of human oversight decisions to detect automation bias, alert fatigue, and degradation in human review effectiveness.",
+      "source_id": "MP-4.2-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Assuming human-AI teaming improves outcomes without measurement may mask situations where AI augmentation actually degrades decision quality. Which control objective addresses this risk?",
+      "back": "MS-2.11-001 (MEASURE 2.11): The organization evaluates AI system performance in the context of human-AI teaming, measuring whether AI augmentation improves decision quality compared to purely human or purely automated processes.",
+      "source_id": "MS-2.11-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Reactive compliance posture leads to rushed implementations, control gaps, and potential MRA/MRIA findings during examinations. Which control objective addresses this risk?",
+      "back": "GV-1.1-003 (GOVERN 1.1): The organization monitors proposed rulemaking, supervisory statements, and interagency guidance related to AI and updates its compliance program proactively.",
+      "source_id": "GV-1.1-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: AI-generated communications that are inaccurate or misleading violate consumer protection laws and create UDAAP enforcement risk. Which control objective addresses this risk?",
+      "back": "GV-5.2-004 (GOVERN 5.2): The organization ensures AI-driven customer communications and disclosures are accurate, not misleading, and compliant with UDAAP, Truth in Lending, and other consumer protection requirements.",
+      "source_id": "GV-5.2-004",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Unmapped external dependencies create single points of failure that can cascade to AI system outages without warning. Which control objective addresses this risk?",
+      "back": "MP-2.2-002 (MAP 2.2): System mapping identifies all dependencies on external data sources, APIs, and third-party services, with contingency plans for dependency failures.",
+      "source_id": "MP-2.2-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Ungoverned shared data assets create hidden dependencies where changes to one feature can silently degrade multiple AI systems. Which control objective addresses this risk?",
+      "back": "MP-3.5-003 (MAP 3.5): Feature stores and shared data assets used across multiple AI systems are governed with version control, access management, and impact analysis capabilities.",
+      "source_id": "MP-3.5-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: AI in financial products that harms vulnerable consumers creates acute regulatory, legal, and reputational risk for the institution. Which control objective addresses this risk?",
+      "back": "MP-1.2-002 (MAP 1.2): Stakeholder analysis includes specific assessment of consumer impact for AI used in credit, deposit, payment, insurance, and investment products, with particular attention to financially vulnerable populations.",
+      "source_id": "MP-1.2-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Ambiguous AI responsibilities across defense lines lead to control gaps, duplicated effort, or inadequate independent oversight \u2014 a common examination criticism. Which control objective addresses this risk?",
+      "back": "GV-2.1-001 (GOVERN 2.1): Roles and responsibilities for AI risk management are clearly defined across the three lines of defense, with the first line owning AI systems, the second line providing independent oversight, and the third line providing assurance.",
+      "source_id": "GV-2.1-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Features that proxy for protected characteristics in credit models create disparate impact liability and are a primary focus of CFPB and DOJ fair lending examinations. Which control objective addresses this risk?",
+      "back": "MP-3.2-002 (MAP 3.2): For AI used in credit decisioning, the organization evaluates all input features for potential proxy discrimination, particularly features correlated with race, ethnicity, national origin, or other protected characteristics.",
+      "source_id": "MP-3.2-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Inconsistent technical standards across AI initiatives lead to quality issues, deployment failures, and examination findings on model risk management. Which control objective addresses this risk?",
+      "back": "GV-1.5-001 (GOVERN 1.5): The organization defines and enforces minimum technical standards for AI system development, testing, deployment, and monitoring, consistent with model risk management expectations under SR 11-7.",
+      "source_id": "GV-1.5-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Monitoring systems that share infrastructure with production AI can fail simultaneously, creating blind spots during the incidents they are designed to detect. Which control objective addresses this risk?",
+      "back": "MS-1.2-003 (MEASURE 1.2): Monitoring systems are designed to be resilient and independent from the AI systems they monitor, preventing correlated failures that could blind the organization to AI system issues.",
+      "source_id": "MS-1.2-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Low-fidelity explanations create an illusion of transparency while potentially misrepresenting model behavior to users and regulators. Which control objective addresses this risk?",
+      "back": "MS-2.6-003 (MEASURE 2.6): The organization measures the fidelity of AI explanation methods to the underlying model, quantifying how accurately post-hoc explanations reflect actual model decision-making.",
+      "source_id": "MS-2.6-003",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Fragmented AI infrastructure leads to inconsistent practices, duplicated effort, and difficulty enforcing governance standards across teams. Which control objective addresses this risk?",
+      "back": "GV-4.1-004 (GOVERN 4.1): The organization establishes shared infrastructure and platforms for AI development and deployment that promote consistency, efficiency, and governance compliance across AI teams.",
+      "source_id": "GV-4.1-004",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Siloed AI risk management disconnected from ERM creates blind spots in enterprise risk reporting and may understate aggregate risk exposure. Which control objective addresses this risk?",
+      "back": "GV-3.1-001 (GOVERN 3.1): The organization integrates AI risk into its enterprise risk management framework, with AI-specific risk categories, appetite statements, and reporting aligned with existing operational, compliance, and strategic risk processes.",
+      "source_id": "GV-3.1-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Reporting only system-level metrics without program-level assessment prevents assessment of whether the AI governance framework itself is effective. Which control objective addresses this risk?",
+      "back": "MS-3.2-002 (MEASURE 3.2): Risk reporting differentiates between AI system performance metrics and AI governance program metrics, providing visibility into both individual system health and the overall effectiveness of the AI governance framework.",
+      "source_id": "MS-3.2-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: AI systems that affect consumer access to financial products carry outsized regulatory and reputational risk that generic tiering frameworks may underweight. Which control objective addresses this risk?",
+      "back": "GV-1.2-002 (GOVERN 1.2): AI risk classification explicitly considers fair lending implications, BSA/AML exposure, and consumer protection risks as elevated risk factors for financial services AI systems.",
+      "source_id": "GV-1.2-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Equal treatment of all AI systems regardless of risk wastes limited governance resources and may leave the highest-risk systems under-managed. Which control objective addresses this risk?",
+      "back": "MG-1.2-001 (MANAGE 1.2): The organization prioritizes AI risk management activities based on a systematic assessment of risk severity, likelihood, and potential impact, focusing resources on the highest-risk AI systems.",
+      "source_id": "MG-1.2-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: AI systems in market-sensitive functions can amplify systemic risk through correlated behavior and speed-of-light decision making. Which control objective addresses this risk?",
+      "back": "GV-6.1-002 (GOVERN 6.1): AI risk assessments consider macro-level financial stability implications, including the potential for AI-driven herding behavior, flash events, and algorithmic amplification of market stress.",
+      "source_id": "GV-6.1-002",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "scenario",
+      "front": "Scenario: Incomplete model inventories are a recurring examination finding and prevent effective oversight of AI risk across the enterprise. Which control objective addresses this risk?",
+      "back": "GV-1.6-001 (GOVERN 1.6): The organization maintains an enterprise-wide AI system inventory (model inventory) that is complete, accurate, and includes all AI/ML models regardless of development source, consistent with SR 11-7 model inventory requirements.",
+      "source_id": "GV-1.6-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does GV-1.1-001 (under GOVERN 1.1) address?",
+      "back": "The organization maintains an inventory of all applicable AI-related laws, regulations, and supervisory guidance (e.g., SR 11-7, OCC 2011-12, EU AI Act, state-level AI statutes) and maps them to AI systems in use.",
+      "source_id": "GV-1.1-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does GV-1.2-001 (under GOVERN 1.2) address?",
+      "back": "The organization maintains a tiered AI risk classification framework that categorizes AI systems by risk level (e.g., critical, high, medium, low) based on impact to consumers, safety, and financial stability.",
+      "source_id": "GV-1.2-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does GV-1.3-001 (under GOVERN 1.3) address?",
+      "back": "The organization defines and documents acceptable AI use boundaries, including explicit prohibitions on AI applications that conflict with fair lending laws, consumer protection requirements, or safety-and-soundness standards.",
+      "source_id": "GV-1.3-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does GV-1.6-001 (under GOVERN 1.6) address?",
+      "back": "The organization maintains an enterprise-wide AI system inventory (model inventory) that is complete, accurate, and includes all AI/ML models regardless of development source, consistent with SR 11-7 model inventory requirements.",
+      "source_id": "GV-1.6-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does GV-1.7-001 (under GOVERN 1.7) address?",
+      "back": "The organization establishes AI-specific incident response and escalation procedures integrated with existing operational risk and business continuity frameworks.",
+      "source_id": "GV-1.7-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does GV-2.1-001 (under GOVERN 2.1) address?",
+      "back": "Roles and responsibilities for AI risk management are clearly defined across the three lines of defense, with the first line owning AI systems, the second line providing independent oversight, and the third line providing assurance.",
+      "source_id": "GV-2.1-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does MP-1.1-001 (under MAP 1.1) address?",
+      "back": "For each proposed AI use case, the organization documents the intended purpose, scope, target population, expected benefits, and potential risks in a structured use case assessment.",
+      "source_id": "MP-1.1-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does MP-3.2-001 (under MAP 3.2) address?",
+      "back": "The organization assesses AI training and operational data for embedded biases, including historical discrimination patterns, sampling biases, and proxy variable effects.",
+      "source_id": "MP-3.2-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does MS-2.5-001 (under MEASURE 2.5) address?",
+      "back": "The organization implements comprehensive fairness testing for AI systems that affect consumers, measuring disparate impact across protected class attributes using multiple fairness metrics.",
+      "source_id": "MS-2.5-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does MS-2.6-001 (under MEASURE 2.6) address?",
+      "back": "The organization assesses and measures AI system explainability, ensuring that model outputs can be understood and explained at a level appropriate for the decision context and audience.",
+      "source_id": "MS-2.6-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does MS-2.7-001 (under MEASURE 2.7) address?",
+      "back": "The organization implements security testing for AI systems, including vulnerability assessment, penetration testing, and adversarial robustness evaluation specific to AI/ML attack vectors.",
+      "source_id": "MS-2.7-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does MS-2.10-001 (under MEASURE 2.10) address?",
+      "back": "The organization measures and reports on AI system availability, reliability, and operational performance against defined service level objectives.",
+      "source_id": "MS-2.10-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does MS-2.11-001 (under MEASURE 2.11) address?",
+      "back": "The organization evaluates AI system performance in the context of human-AI teaming, measuring whether AI augmentation improves decision quality compared to purely human or purely automated processes.",
+      "source_id": "MS-2.11-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does MG-1.1-001 (under MANAGE 1.1) address?",
+      "back": "The organization implements risk treatment plans for all AI systems, selecting appropriate risk responses (mitigate, transfer, accept, avoid) based on risk assessment results and risk appetite.",
+      "source_id": "MG-1.1-001",
+      "source_table": "sentinel_control_objectives"
+    },
+    {
+      "card_type": "control",
+      "front": "What control objective does MG-2.4-001 (under MANAGE 2.4) address?",
+      "back": "The organization establishes AI model decommissioning procedures that ensure safe transition, data preservation for regulatory purposes, and knowledge retention.",
+      "source_id": "MG-2.4-001",
+      "source_table": "sentinel_control_objectives"
+    }
+  ]
+}
