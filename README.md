@@ -12,7 +12,7 @@ By [Gabriel Ziegler](https://github.com/Gabriel-is)
 
 Sentinel is a structured compliance toolkit for two foundational AI risk management frameworks:
 
-- **NIST AI RMF 1.0** (AI 100-1) -- The federal standard for AI risk management, organized into four core functions (Govern, Map, Measure, Manage), 19 categories, and 72 subcategories.
+- **NIST AI RMF 1.0** (AI 100-1) -- The federal standard for AI risk management, organized into four core functions (Govern, Map, Measure, Manage), 18 categories, and 67 subcategories.
 - **CRI Financial Services AI RMF** (FS AI RMF) -- The Cyber Risk Institute's financial-services overlay that maps 230 control objectives onto the NIST structure, with adoption stages, risk tiering, and trustworthiness principles tailored to regulated institutions.
 
 Sentinel operates in two modes:
@@ -28,10 +28,11 @@ Two interfaces serve different users:
 |-----------|----------|-------------|
 | **MCP Server** | Claude, LLM agents, programmatic clients | JSON-RPC 2.0 over HTTP POST, deployed as a Supabase Edge Function (Deno) |
 | **CLI** | Humans, shell scripts, CI pipelines | Deno executable with a local SQLite cache, synced from the Supabase backend |
+| **Study Guide** | Anyone preparing for AI risk management roles | Interactive card-based reference at [my2b.ai/sentinel](https://my2b.ai/sentinel) with cross-references and live API drill-down |
 
 The dataset includes:
 
-- 4 NIST AI RMF functions, 19 categories, 72 subcategories
+- 4 NIST AI RMF functions, 18 categories, 67 subcategories
 - 230 FS AI RMF control objectives with adoption stages and trustworthiness principles
 - 82 glossary terms across risk, governance, technical, and regulatory categories
 - 109 framework crosswalks (SR 11-7, ISO 42001, EU AI Act, NIST CSF, OWASP LLM Top 10)
@@ -274,7 +275,7 @@ Look up regulatory and AI risk management terms.
 
 #### `sentinel:quiz`
 
-Generate a quiz question with spaced repetition tracking (SM-2 algorithm).
+Generate a quiz question with spaced repetition tracking (SM-2 algorithm). New users automatically receive 70+ starter flashcards on their first quiz call (30 term, 4 function, 25 scenario, 15 control cards built from the database).
 
 ```json
 {
@@ -504,7 +505,7 @@ curl -X POST \
 
 | Source | What was extracted | How |
 |--------|--------------------|-----|
-| [NIST AI 100-1](https://nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf) (AI RMF 1.0) | 4 functions, 19 categories, 72 subcategories, 7 trustworthiness characteristics | Manual extraction to `data/parsed/nist-ai-rmf-taxonomy.json`, then `scripts/generate_seed.py` to SQL |
+| [NIST AI 100-1](https://nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf) (AI RMF 1.0) | 4 functions, 18 categories, 67 subcategories, 7 trustworthiness characteristics | Manual extraction to `data/parsed/nist-ai-rmf-taxonomy.json`, then `scripts/generate_seed.py` to SQL |
 | [CRI FS AI RMF Guidebook v1.0](https://cyberriskinstitute.org/wp-content/uploads/2026/02/CRI-FS-AI-RMF-Guidebook_Full_v.1.0-1.docx) | 230 control objectives with adoption stages, risk statements, trustworthy principles, implementation guidance | Manual extraction to `data/parsed/fs-ai-rmf-controls.json`, then `scripts/generate_seed.py` to SQL |
 | [NIST AI RMF Playbook](https://airc.nist.gov/AI_RMF_Playbook) | Suggested actions for each subcategory | Included in `nist-ai-rmf-taxonomy.json` as `suggested_actions` arrays |
 | Regulatory glossary (composite) | 82 terms across risk, governance, technical, and regulatory categories | `data/parsed/glossary.json` |
@@ -649,8 +650,9 @@ sentinel/
 
 | Version | Milestone |
 |---------|-----------|
-| **v0.4** | CLI compiled binary distribution via `deno compile` |
-| **v0.5** | CLI authentication + flashcard/quiz sync to Supabase |
+| **v0.4** | Rate limiting, audit logging, X-Sentinel-Token auth, auto-seed flashcards (current) |
+| **v0.5** | CLI compiled binary distribution via `deno compile` |
+| **v0.6** | CLI authentication + flashcard/quiz sync to Supabase |
 | **v0.6** | Cron-based data refresh from source documents |
 | **v0.7** | Semantic assessment using embeddings (upgrade from keyword matching) |
 | **v1.0** | EU AI Act full mapping, ISO 42001 deep crosswalk, OWASP Agentic AI Top 10 |

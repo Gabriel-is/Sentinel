@@ -526,10 +526,11 @@ async function seedFlashcards(
   // Build seed cards from the database content
   const seeds: Array<{ user_id: string; card_type: string; front: string; back: string; source_id: string; source_table: string }> = [];
 
-  // Term cards from glossary (top terms)
+  // Term cards from glossary (top terms, ordered by term for determinism)
   const { data: terms } = await supabase
     .from("sentinel_glossary")
     .select("id, term, definition, source")
+    .order("term")
     .limit(30);
   if (terms) {
     for (const t of terms) {
@@ -587,9 +588,14 @@ async function seedFlashcards(
     }
   }
 
-  // Insert in batches of 25
+  // Insert in batches of 25, skip duplicates via onConflict
   for (let i = 0; i < seeds.length; i += 25) {
-    await supabase.from("sentinel_flashcards").insert(seeds.slice(i, i + 25));
+    const { error } = await supabase
+      .from("sentinel_flashcards")
+      .upsert(seeds.slice(i, i + 25), { onConflict: "id", ignoreDuplicates: true });
+    if (error) {
+      console.error("Flashcard seed batch failed:", error.message);
+    }
   }
 }
 
@@ -604,13 +610,13 @@ async function handleQuiz(
     difficulty?: number;
   };
 
-  // Auto-seed flashcards for new users
+  // Auto-seed flashcards for new users (null count = error, treat as no cards)
   const { count: cardCount } = await supabase
     .from("sentinel_flashcards")
     .select("id", { count: "exact", head: true })
     .eq("user_id", userId);
 
-  if (cardCount === 0) {
+  if (!cardCount) {
     await seedFlashcards(supabase, userId);
   }
 
