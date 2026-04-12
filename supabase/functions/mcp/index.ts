@@ -1005,16 +1005,80 @@ async function handleAdoptionStage(
 
 // ── MCP Protocol Handler ─────────────────────────────────────
 
+// ── Rate Limiting ────────────────────────────────────────────
+
+const RATE_LIMITS: Record<string, { max: number; windowMinutes: number }> = {
+  "tools/call": { max: 60, windowMinutes: 1 },
+  "initialize": { max: 10, windowMinutes: 1 },
+  "tools/list": { max: 10, windowMinutes: 1 },
+};
+
+async function checkRateLimit(
+  supabase: ReturnType<typeof createClient>,
+  identifier: string,
+  action: string
+): Promise<{ allowed: boolean; remaining: number }> {
+  const limits = RATE_LIMITS[action] || { max: 30, windowMinutes: 1 };
+  const windowStart = new Date();
+  windowStart.setMinutes(windowStart.getMinutes() - limits.windowMinutes);
+
+  const { count } = await supabase
+    .from("sentinel_rate_limits")
+    .select("id", { count: "exact", head: true })
+    .eq("identifier", identifier)
+    .eq("action", action)
+    .gte("window_start", windowStart.toISOString());
+
+  const current = count || 0;
+  if (current >= limits.max) {
+    return { allowed: false, remaining: 0 };
+  }
+
+  // Record this request
+  await supabase.from("sentinel_rate_limits").insert({
+    identifier,
+    action,
+    window_start: new Date().toISOString(),
+  });
+
+  return { allowed: true, remaining: limits.max - current - 1 };
+}
+
+// ── Audit Logging ────────────────────────────────────────────
+
+async function logAudit(
+  supabase: ReturnType<typeof createClient>,
+  entry: {
+    user_id: string | null;
+    tool_name: string;
+    input_summary?: string;
+    ip_address?: string;
+    user_agent?: string;
+    response_status: string;
+    error_message?: string;
+    duration_ms?: number;
+  }
+): Promise<void> {
+  // Fire and forget — don't block the response
+  supabase.from("sentinel_audit_log").insert(entry).then(() => {});
+}
+
+// ── Main Handler ─────────────────────────────────────────────
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Service role client for DB operations (bypasses RLS)
+  const startTime = Date.now();
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
   );
+
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("cf-connecting-ip") || "unknown";
+  const userAgent = req.headers.get("user-agent") || "unknown";
 
   let body: { method?: string; params?: Record<string, unknown>; id?: string | number | null };
   try {
@@ -1025,12 +1089,23 @@ Deno.serve(async (req) => {
 
   const { method, params, id = null } = body;
 
+  // Rate limit all requests by IP
+  const rateCheck = await checkRateLimit(supabase, ip, method || "unknown");
+  if (!rateCheck.allowed) {
+    await logAudit(supabase, {
+      user_id: null, tool_name: method || "unknown",
+      ip_address: ip, user_agent: userAgent,
+      response_status: "rate_limited",
+    });
+    return jsonRpcError(id, -32000, "Rate limit exceeded. Try again shortly.", 429);
+  }
+
   // initialize and tools/list don't require auth — they're discovery
   if (method === "initialize") {
     return jsonRpcResult(id, {
       protocolVersion: "2024-11-05",
       capabilities: { tools: {} },
-      serverInfo: { name: "sentinel", version: "0.3.0" },
+      serverInfo: { name: "sentinel", version: "0.4.0" },
     });
   }
 
@@ -1041,6 +1116,11 @@ Deno.serve(async (req) => {
   // Everything else requires authentication
   const auth = await authenticateRequest(req);
   if ("error" in auth) {
+    await logAudit(supabase, {
+      user_id: null, tool_name: method || "unknown",
+      ip_address: ip, user_agent: userAgent,
+      response_status: "auth_failed", error_message: auth.error,
+    });
     return jsonRpcError(id, -32000, auth.error, 401);
   }
 
@@ -1053,16 +1133,30 @@ Deno.serve(async (req) => {
     }
     try {
       const toolResult = await handler(toolInput, supabase, auth.userId);
+      const duration = Date.now() - startTime;
+      await logAudit(supabase, {
+        user_id: auth.userId, tool_name: toolName,
+        input_summary: JSON.stringify(toolInput).slice(0, 200),
+        ip_address: ip, user_agent: userAgent,
+        response_status: "success", duration_ms: duration,
+      });
       return jsonRpcResult(id, {
         content: [
           { type: "text", text: JSON.stringify(toolResult, null, 2) },
         ],
       });
     } catch (err) {
+      const duration = Date.now() - startTime;
+      await logAudit(supabase, {
+        user_id: auth.userId, tool_name: toolName,
+        input_summary: JSON.stringify(toolInput).slice(0, 200),
+        ip_address: ip, user_agent: userAgent,
+        response_status: "error",
+        error_message: (err as Error).message,
+        duration_ms: duration,
+      });
       return jsonRpcError(
-        id,
-        -32603,
-        `Tool execution error: ${(err as Error).message}`
+        id, -32603, `Tool execution error: ${(err as Error).message}`
       );
     }
   }
