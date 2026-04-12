@@ -8,11 +8,22 @@ Sentinel uses a layered authentication and authorization model built on Supabase
 
 ### Authentication
 
-All authenticated requests require a valid Supabase JWT issued via `supabase.auth.signUp()` or `supabase.auth.signInWithPassword()`. The token flow works as follows:
+Sentinel uses a 4-layer authentication model:
 
-1. **Supabase Gateway** validates the JWT signature and expiry before the request reaches the Edge Function. Invalid or expired tokens are rejected at the gateway with a 401 response.
-2. **Application-level verification** inside the MCP Edge Function extracts the user ID from the JWT claims and passes it to database queries, ensuring Row Level Security policies bind to the correct user.
-3. **Service role key** is used only server-side within the Edge Function for operations that need elevated access (e.g., reading reference data on behalf of an anonymous caller). This key is stored as a Supabase Edge Function secret and is never exposed to clients.
+1. **HTTPS** -- Supabase-managed TLS. All traffic is encrypted in transit.
+2. **Supabase Gateway** -- Validates the `Authorization: Bearer <anon_key>` header (HS256 JWT). This acts as a firewall that rejects garbage requests before they reach application code. The anon key is public by design.
+3. **Application-level verification** -- The Edge Function reads the user's auth token from the `X-Sentinel-Token` header and calls `supabase.auth.getUser()` to validate it against the auth server (ES256 JWT). This is the real identity check. Returns 401 if invalid or expired.
+4. **Row Level Security** -- Database policies enforce data isolation per `auth.uid()`.
+
+Why two headers: The Supabase gateway only verifies HS256 JWTs (anon/service keys), but user auth tokens are ES256. Splitting into `Authorization` (gateway firewall) and `X-Sentinel-Token` (app auth) restores all four security layers.
+
+**Rate limiting:** 60 requests/minute for `tools/call`, 10/minute for discovery endpoints (`initialize`, `tools/list`). Per-IP sliding window stored in `sentinel_rate_limits` table. Returns HTTP 429 when exceeded.
+
+**Audit logging:** Every `tools/call` is logged to `sentinel_audit_log` with user_id, tool_name, input_summary (truncated to 200 chars), IP address, user agent, response status, and duration_ms. Users can read their own audit logs via RLS.
+
+**Service role key** is used only server-side within the Edge Function. Stored as a Supabase environment secret, never exposed to clients.
+
+**Password policy:** Minimum 10 characters, must include uppercase, lowercase, digit, and symbol. Email confirmation required before access.
 
 ### Authorization (Row Level Security)
 
@@ -58,17 +69,13 @@ The following values are sensitive and must not be committed to source control o
 
 This section documents known security limitations honestly. Sentinel is a demonstration project and interview artifact, not a production compliance platform.
 
-### No Rate Limiting on the MCP Endpoint
-
-The Edge Function has no request throttling. A malicious or misconfigured client could send unlimited requests, potentially exhausting Supabase Edge Function invocation limits or database connections. The only backstop is Supabase's platform-level rate limits on the free tier.
-
 ### CORS is Wildcard (*)
 
-The MCP endpoint returns `Access-Control-Allow-Origin: *`, allowing any origin to make requests. This is acceptable for a public MCP server but means browser-based clients from any domain can interact with the API.
+The MCP endpoint returns `Access-Control-Allow-Origin: *`, allowing any origin to make requests. This is acceptable for a public MCP server but means browser-based clients from any domain can interact with the API. Tighten to specific origins for production.
 
 ### No API Key Rotation Mechanism
 
-There is no built-in process for rotating the Supabase anon key or service role key. Rotation requires manual update of Supabase project settings and redeployment of the Edge Function.
+There is no built-in process for rotating the Supabase anon key or service role key. Rotation requires manual update of Supabase project settings and redeployment. Long-lived API keys for MCP clients (as an alternative to 1-hour JWTs) are planned but not yet implemented.
 
 ### Assessment Uses Keyword Matching, Not Semantic Analysis
 
@@ -78,53 +85,34 @@ The `sentinel:assess` tool identifies relevant controls by matching keywords fro
 - Can surface false positives when keywords appear in unrelated context
 - Does not understand negation (e.g., "we do NOT perform bias testing" would still match bias-related controls as covered)
 
-### No Email Confirmation on Signup
-
-Supabase email confirmation is not enabled. Any valid email address gets instant access upon signup. This means there is no verification that the user owns the email address they register with.
+Semantic assessment via embeddings is on the roadmap (v0.7+).
 
 ### Token Refresh is Client Responsibility
 
-JWTs expire after the default Supabase duration (1 hour). The server does not handle refresh -- clients must call `supabase.auth.refreshSession()` or re-authenticate. Expired tokens are rejected at the gateway.
+JWTs expire after 1 hour. The server does not handle refresh -- clients must re-authenticate or use the refresh token. Users are informed of this during signup at [my2b.ai/sentinel](https://my2b.ai/sentinel).
 
 ### CLI Anon Key is Embedded in Source
 
-The Supabase anon key is hardcoded in `cli/sentinel.ts`. This is by design: the anon key only grants read access to public reference data. However, it does mean anyone with the source code can make unauthenticated read requests to the Supabase project.
-
-### No Audit Logging of Tool Calls
-
-There is no record of which tools are called, by whom, or with what arguments. Failed and successful requests are not logged beyond Supabase's built-in Edge Function logs (which have limited retention on the free tier).
-
-### No Input Length Validation on Assess Content
-
-The `sentinel:assess` tool accepts arbitrary-length content in the `content` field. A very large document could cause slow processing or memory issues in the Edge Function. There is no server-side validation of input size.
+The Supabase anon key is hardcoded in `cli/commands/sync.ts`. This is by design: the anon key only grants read access to public reference data (enforced by RLS). It cannot write data or access user-specific records.
 
 ### Crosswalk Data is Manually Maintained
 
-Framework crosswalk mappings (SR 11-7, ISO 42001, EU AI Act, OWASP LLM Top 10) were manually curated. They are not automatically updated when source frameworks are revised. Staleness is a risk as frameworks evolve.
+Framework crosswalk mappings (SR 11-7, ISO 42001, EU AI Act, OWASP LLM Top 10) were manually curated. They are not automatically updated when source frameworks are revised. Automated weekly checks for source updates are planned.
 
 ## Recommendations for Production Deployment
 
 If Sentinel were to be deployed in a production environment handling real compliance workflows, the following changes would be necessary:
 
-1. **Tighten CORS to specific origins.** Replace the wildcard `*` with an allowlist of trusted domains (e.g., `my2b.ai`, the organization's internal tools).
-
-2. **Enable email confirmation.** Turn on Supabase email confirmation to verify user identity before granting access. Consider adding organizational domain restrictions.
-
-3. **Add rate limiting via Edge Function middleware.** Implement per-user and per-IP rate limits at the Edge Function level, using either Supabase's built-in mechanisms or a custom token bucket stored in the database or KV.
-
-4. **Implement API key auth for MCP clients.** Issue per-client API keys for programmatic access, separate from user JWTs. This enables revocation and usage tracking per integration.
-
-5. **Add audit logging.** Log every tool invocation with timestamp, user ID, tool name, input parameters (redacted as appropriate), and response status. Store logs in a dedicated table with appropriate retention policies.
-
-6. **Add input size limits.** Validate the `content` field in `sentinel:assess` and other free-text inputs. Reject payloads above a reasonable threshold (e.g., 100KB).
-
-7. **Set up monitoring and alerting.** Configure alerts on Edge Function error rates, database connection pool usage, and unusual request patterns. Supabase dashboard metrics and external monitoring (e.g., Grafana, PagerDuty) are both viable.
-
-8. **Implement semantic analysis for assessments.** Replace or augment keyword matching with embedding-based similarity search to improve control relevance in `sentinel:assess` results.
-
-9. **Automate crosswalk updates.** Establish a review cadence for crosswalk data and, where possible, pull from machine-readable framework sources to reduce manual maintenance burden.
-
-10. **Enable database backups.** Ensure Supabase point-in-time recovery is enabled and tested. User assessment data has compliance value and should not be lost.
+1. ~~**Add rate limiting.**~~ Done (v0.4.0). 60/min tools/call, 10/min discovery, per-IP.
+2. ~~**Add audit logging.**~~ Done (v0.4.0). Every call logged with user, tool, IP, duration.
+3. ~~**Enable email confirmation.**~~ Done. Configured in Supabase dashboard.
+4. ~~**Add input size limits.**~~ Done. 100KB max on assess content.
+5. **Tighten CORS to specific origins.** Replace `*` with `my2b.ai` and trusted domains.
+6. **Implement API key auth for MCP clients.** Long-lived keys for programmatic access, separate from 1-hour JWTs.
+7. **Set up monitoring and alerting.** Alert on error rates, connection pool usage, unusual patterns.
+8. **Implement semantic assessment.** Embedding-based similarity search to replace keyword matching.
+9. **Automate crosswalk updates.** Weekly checks against source framework publications.
+10. **Enable database backups.** Point-in-time recovery for user assessment data.
 
 ## Reporting Vulnerabilities
 
@@ -139,4 +127,4 @@ Please include:
 - Potential impact
 - Suggested fix (if you have one)
 
-You will receive an acknowledgment within 48 hours. Sentinel is an open-source project under AGPL-3.0; responsible disclosures are appreciated and credited.
+You will receive an acknowledgment within 48 hours. Sentinel is an open-source project under MIT license; responsible disclosures are appreciated and credited.
