@@ -230,6 +230,35 @@ const TOOLS = [
       required: ["responses"],
     },
   },
+  {
+    name: "sentinel:context_query",
+    description:
+      "Semantic + graph search over a populated document corpus. Returns top chunks matching the query plus cross-referenced related documents from the edge graph. Use for open-ended retrieval over corpora like OCC public docs (corpus_id: 'occ'). Distinct from sentinel:lookup (framework taxonomy) — this searches document CONTENT, not framework IDs.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: {
+          type: "string",
+          description:
+            "Natural-language question or keyword query. E.g. 'What changed between Stock Loan Hedge and Market Loan?'",
+        },
+        corpus_id: {
+          type: "string",
+          description:
+            "Corpus slug to search. Available: 'occ' (OCC Ovation data layouts, 15 docs).",
+          default: "occ",
+        },
+        top_k: {
+          type: "integer",
+          minimum: 1,
+          maximum: 20,
+          default: 5,
+          description: "Number of top chunks to return.",
+        },
+      },
+      required: ["query"],
+    },
+  },
 ];
 
 // ── Tool Handlers ────────────────────────────────────────────
@@ -245,6 +274,7 @@ const handlers: Record<string, ToolHandler> = {
   "sentinel:explain": handleExplain,
   "sentinel:glossary": handleGlossary,
   "sentinel:quiz": handleQuiz,
+  "sentinel:context_query": handleContextQuery,
   "sentinel:progress": handleProgress,
   "sentinel:assess": handleAssess,
   "sentinel:crosswalk": handleCrosswalk,
@@ -976,6 +1006,188 @@ async function handleCrosswalk(
     .eq("target_framework", target);
   if (error) return { error: error.message };
   return { source: control_id, target_framework: target, mappings: data };
+}
+
+async function handleContextQuery(
+  input: Record<string, unknown>,
+  supabase: ReturnType<typeof createClient>
+) {
+  const { query, corpus_id = "occ", top_k = 5 } = input as {
+    query: string;
+    corpus_id?: string;
+    top_k?: number;
+  };
+
+  if (!query || typeof query !== "string" || !query.trim()) {
+    return { error: "query is required and must be a non-empty string" };
+  }
+  const k = Math.min(Math.max(Number(top_k) || 5, 1), 20);
+
+  // Verify the corpus exists so we fail fast on typos.
+  const { data: corpusRow } = await supabase
+    .from("sentinel_corpora")
+    .select("id, label, status, source_count, last_ingested_at")
+    .eq("id", corpus_id)
+    .single();
+  if (!corpusRow) {
+    const { data: available } = await supabase
+      .from("sentinel_corpora")
+      .select("id, label, status");
+    return {
+      error: `Unknown corpus_id: ${corpus_id}`,
+      available_corpora: available ?? [],
+    };
+  }
+
+  // Try semantic search via Supabase.ai.Session('gte-small') + pgvector RPC.
+  // Fall back to FTS if the AI session isn't available (e.g. local dev
+  // without the edge runtime's ai worker).
+  let chunks: Array<Record<string, unknown>> = [];
+  let searchMethod: "vector" | "fts" = "vector";
+
+  // deno-lint-ignore no-explicit-any
+  const supabaseAI = (globalThis as any).Supabase?.ai;
+  let queryEmbedding: number[] | null = null;
+  if (supabaseAI) {
+    try {
+      const session = new supabaseAI.Session("gte-small");
+      const result = await session.run(query, {
+        mean_pool: true,
+        normalize: true,
+      });
+      if (Array.isArray(result) && result.length === 384) {
+        queryEmbedding = result;
+      }
+    } catch (err) {
+      console.error("[context_query] AI session failed:", (err as Error).message);
+    }
+  }
+
+  if (queryEmbedding) {
+    const { data, error } = await supabase.rpc("sentinel_vector_search", {
+      query_embedding: queryEmbedding,
+      corpus: corpus_id,
+      match_count: k,
+    });
+    if (error) {
+      console.error("[context_query] vector_search rpc error:", error.message);
+    } else {
+      chunks = (data ?? []).map((r: Record<string, unknown>) => ({
+        chunk_id: r.chunk_id,
+        document_id: r.document_id,
+        chunk_index: r.chunk_index,
+        text: r.text,
+        heading_path: r.heading_path,
+        token_count: r.token_count,
+        score: r.similarity,
+        document_title: r.document_title,
+        source_url: r.document_source_url,
+        category: r.document_category,
+        platform: r.document_platform,
+      }));
+    }
+  }
+
+  if (chunks.length === 0) {
+    // FTS fallback
+    searchMethod = "fts";
+    const { data, error } = await supabase.rpc("sentinel_fts_search", {
+      query_text: query,
+      corpus: corpus_id,
+      match_count: k,
+    });
+    if (error) {
+      return {
+        error: `Both semantic and FTS search failed: ${error.message}`,
+      };
+    }
+    chunks = (data ?? []).map((r: Record<string, unknown>) => ({
+      chunk_id: r.chunk_id,
+      document_id: r.document_id,
+      chunk_index: r.chunk_index,
+      text: r.text,
+      heading_path: r.heading_path,
+      token_count: r.token_count,
+      score: r.rank,
+      document_title: r.document_title,
+      source_url: r.document_source_url,
+      category: r.document_category,
+      platform: r.document_platform,
+    }));
+  }
+
+  // Related docs via edges from the matched chunks.
+  const chunkIds = chunks.map((c) => c.chunk_id);
+  let relatedDocs: Array<Record<string, unknown>> = [];
+  if (chunkIds.length > 0) {
+    const { data: edgeRows } = await supabase
+      .from("sentinel_edges")
+      .select(
+        "source_chunk_id, relation_type, evidence_sentence, confidence, target_document_id",
+      )
+      .in("source_chunk_id", chunkIds);
+
+    const targetIds = [
+      ...new Set((edgeRows ?? []).map((e) => e.target_document_id)),
+    ];
+    if (targetIds.length > 0) {
+      const { data: docs } = await supabase
+        .from("sentinel_documents")
+        .select("id, title, source_url, category, platform")
+        .in("id", targetIds);
+
+      // Aggregate per-target relation types + strongest evidence.
+      const byTarget = new Map<string, Record<string, unknown>>();
+      for (const e of edgeRows ?? []) {
+        const d = docs?.find((x) => x.id === e.target_document_id);
+        if (!d) continue;
+        const existing = byTarget.get(d.id) ?? {
+          document_id: d.id,
+          title: d.title,
+          source_url: d.source_url,
+          category: d.category,
+          platform: d.platform,
+          relation_types: new Set<string>(),
+          evidence_samples: [] as string[],
+          max_confidence: 0,
+        };
+        (existing.relation_types as Set<string>).add(e.relation_type);
+        if (
+          (existing.evidence_samples as string[]).length < 2 &&
+          e.evidence_sentence
+        ) {
+          (existing.evidence_samples as string[]).push(e.evidence_sentence);
+        }
+        existing.max_confidence = Math.max(
+          Number(existing.max_confidence),
+          Number(e.confidence) || 0,
+        );
+        byTarget.set(d.id, existing);
+      }
+
+      relatedDocs = [...byTarget.values()]
+        .map((r) => ({
+          ...r,
+          relation_types: [...(r.relation_types as Set<string>)],
+        }))
+        .sort(
+          (a, b) => Number(b.max_confidence) - Number(a.max_confidence),
+        );
+    }
+  }
+
+  return {
+    query,
+    corpus: {
+      id: corpusRow.id,
+      label: corpusRow.label,
+      source_count: corpusRow.source_count,
+      last_ingested_at: corpusRow.last_ingested_at,
+    },
+    search_method: searchMethod,
+    chunks,
+    related_docs: relatedDocs,
+  };
 }
 
 async function handleAdoptionStage(

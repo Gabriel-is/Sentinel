@@ -203,13 +203,15 @@ async function run(options: RunOptions) {
     }
   }
 
-  // 6. Edge extraction pass (after all docs + chunks are in)
+  // 6. Edge extraction pass (after all docs + chunks are in).
+  // Idempotent: before re-extracting, we wipe edges for chunks in this
+  // corpus. Cheap (edges are small, re-extraction is $0.04 on Haiku) and
+  // prevents duplicate rows on re-runs.
   if (!options.skipEdges && summary.chunked > 0) {
     console.log(`[run] extracting edges with Haiku...`);
     const corpusDocs = await persister.listCorpusDocuments(adapter.corpus_id);
     const extractor = new EdgeExtractor(anthropicKey);
 
-    // Pull freshly-inserted chunks — easiest: query all chunks for this corpus
     const { data: chunkRows, error } = await persister.client
       .from("sentinel_chunks")
       .select("id, document_id, text")
@@ -217,6 +219,10 @@ async function run(options: RunOptions) {
     if (error) {
       console.error(`[run] edge scan failed: ${error.message}`);
     } else {
+      const chunkIds = (chunkRows ?? []).map((c) => c.id);
+      console.log(`[run] clearing ${chunkIds.length} chunks' existing edges first...`);
+      await persister.deleteChunkEdges(chunkIds);
+
       let edgeTotal = 0;
       for (const [i, chunk] of (chunkRows ?? []).entries()) {
         const candidates = await extractor.extract({

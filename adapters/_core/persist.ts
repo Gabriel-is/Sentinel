@@ -135,6 +135,19 @@ export class Persister {
     return out;
   }
 
+  async deleteChunkEdges(chunkIds: string[]): Promise<void> {
+    if (chunkIds.length === 0) return;
+    const BATCH = 500;
+    for (let i = 0; i < chunkIds.length; i += BATCH) {
+      const batch = chunkIds.slice(i, i + BATCH);
+      const { error } = await this.client
+        .from("sentinel_edges")
+        .delete()
+        .in("source_chunk_id", batch);
+      if (error) throw new Error(`delete chunk edges: ${error.message}`);
+    }
+  }
+
   async insertEdges(
     candidates: EdgeCandidate[],
     corpusDocuments: Array<{ id: string; title: string }>,
