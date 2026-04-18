@@ -151,14 +151,28 @@ async function run(options: RunOptions) {
         continue;
       }
 
-      // 5. Chunk + embed
+      // 5. Chunk + embed. Hash-idempotent: if this content_hash already
+      // has chunks, skip (same bytes would produce the same embeddings).
+      // Re-run with --force-rechunk to override.
+      if (!options.forceRechunk) {
+        const existingChunks = await persister.countDocumentChunks(doc.id);
+        if (existingChunks > 0) {
+          console.log(
+            `[run] ${f.spec.local_filename}: already embedded (${existingChunks} chunks) — skip`,
+          );
+          summary.chunked++;
+          summary.total_chunks += existingChunks;
+          continue;
+        }
+      }
+
       const chunks = chunkText(parseResult.doc.raw_text, doc.id);
       if (chunks.length === 0) {
         await persister.updateDocumentStatus(doc.id, "done");
         continue;
       }
 
-      // Wipe prior chunks for this doc (forceRechunk or first run is same path)
+      // Force-rechunk path: wipe existing before re-inserting.
       if (options.forceRechunk) {
         await persister.deleteDocumentChunks(doc.id);
       }

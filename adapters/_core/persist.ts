@@ -99,6 +99,15 @@ export class Persister {
     if (error) throw new Error(`delete chunks: ${error.message}`);
   }
 
+  async countDocumentChunks(documentId: string): Promise<number> {
+    const { count, error } = await this.client
+      .from("sentinel_chunks")
+      .select("id", { count: "exact", head: true })
+      .eq("document_id", documentId);
+    if (error) throw new Error(`count chunks: ${error.message}`);
+    return count ?? 0;
+  }
+
   async insertChunks(
     chunks: Array<{
       document_id: string;
