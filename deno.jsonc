@@ -1,0 +1,14 @@
+{
+  "tasks": {
+    "ingest": "deno run --allow-read --allow-write --allow-net --allow-env --allow-sys adapters/_core/run.ts",
+    "ingest:smoke": "deno run --allow-read --allow-write --allow-net --allow-env --allow-sys adapters/_core/run.ts occ --limit 2 --skip-edges",
+    "cli": "deno run --allow-read --allow-write --allow-net --allow-env --unstable-ffi cli/sentinel.ts",
+    "check": "deno check adapters/_core/*.ts adapters/occ/*.ts"
+  },
+  "fmt": {
+    "exclude": ["data/", ".cache/", "node_modules/"]
+  },
+  "lint": {
+    "exclude": ["data/", ".cache/", "node_modules/"]
+  }
+}

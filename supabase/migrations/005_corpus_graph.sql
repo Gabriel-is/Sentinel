@@ -63,7 +63,7 @@ CREATE TABLE sentinel_chunks (
   text              TEXT NOT NULL,
   token_count       INTEGER NOT NULL,
   heading_path      TEXT[] DEFAULT '{}',        -- e.g. ['DDS Market Data Output', 'Full Derivative', 'Options']
-  embedding         VECTOR(1536),               -- text-embedding-3-small
+  embedding         VECTOR(384),                -- Xenova/gte-small (local, keyless)
   metadata          JSONB DEFAULT '{}',
   UNIQUE (document_id, chunk_index)
 );

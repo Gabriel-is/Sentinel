@@ -1,0 +1,49 @@
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Corpus raw files — OCC copyright, not ours to redistribute
+data/sources/*/*.pdf
+data/sources/*/*.xlsx
+data/sources/*/*.xls
+data/sources/*/*.doc
+data/sources/*/*.docx
+data/sources/*/*.zip
+data/sources/*/*.html
+data/sources/*/*.htm
+
+# Deno
+.deno/
+deno_lock.json
+
+# Node (if anyone adds npm tools later)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Local CLI database
+*.db
+*.db-journal
+*.sqlite
+*.sqlite-journal
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Supabase local state
+supabase/.branches/
+supabase/.temp/
+
+# Model cache (Transformers.js downloads weights here on first run)
+.cache/
+models/
