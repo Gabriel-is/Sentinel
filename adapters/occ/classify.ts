@@ -1,13 +1,14 @@
-// OCC document classifier — Ovation/ENCORE data layout corpus.
+// OCC document classifier — Ovation data layouts V1 corpus (18 items).
 //
-// Taxonomy from the build spec:
-//   doc_type:  ovation_guide | encore_guide | fixml_schema | summary | record_layout
-//   platform:  ovation | encore | both
-//   category:  dds_output | input | connectivity | testing | reference | summary | fixml_schema
+// Taxonomy:
+//   doc_type:  ovation_guide | summary | record_layout | fixml_schema | xlsx_template
+//   platform:  ovation | both
+//   category:  summary | input | dds_output | connectivity | fixml_schema
 //
-// Regex-first against filename + URL path. The 31 seed docs all classify
-// deterministically; LLM fallback is signaled (rule="llm") only if both
-// the regex pass and the SourceSpec hint pass miss.
+// V1 corpus is all-Ovation; ENCORE legacy and testing sibling-page docs
+// are deferred to V2. The ENCORE variants of edge_type (e.g.
+// encore_equivalent_of) remain in the schema for V2 but won't be
+// populated in V1.
 
 import type { Classification, ParsedDoc, SourceSpec } from "../_core/types.ts";
 import { OCC_SOURCES } from "./sources.ts";
@@ -18,22 +19,28 @@ interface RuleOutput {
   platform: string;
 }
 
-// Order matters: first match wins. More specific patterns first.
+// Order matters: first match wins. Rules here match filenames the user
+// actually has on disk (see screenshot + page listing at
+// theocc.com/company-information/occ-transformation/data-layouts).
 const RULES: Array<{ match: RegExp; out: RuleOutput }> = [
   // ── Summary / orientation ───────────────────────────────────
   { match: /OV_Clearing_Risk_Data_Layout_Changes_Summary\.pdf$/i,
-    out: { doc_type: "summary", category: "summary", platform: "both" } },
-  { match: /Ovation-Platform-Changes-Enhancements_Clearing-Members.*\.pdf$/i,
     out: { doc_type: "summary", category: "summary", platform: "ovation" } },
-  { match: /Ovation-Platform-Changes-and-Enhancements_Trade-Sources.*\.pdf$/i,
+  { match: /OV_Layout_Documentation_Updates_Summary\.pdf$/i,
     out: { doc_type: "summary", category: "summary", platform: "ovation" } },
-  { match: /Ovation_Conversion_FAQ.*\.pdf$/i,
-    out: { doc_type: "summary", category: "summary", platform: "both" } },
 
-  // ── Ovation DDS output guides ───────────────────────────────
+  // ── Ovation System Input ────────────────────────────────────
+  { match: /OV_CSV_Input_Guide_for-Clearing_Members\.pdf$/i,
+    out: { doc_type: "ovation_guide", category: "input", platform: "ovation" } },
+  { match: /OV_CSV_Input_Templates_for_Clearing_Members\.xlsx$/i,
+    out: { doc_type: "xlsx_template", category: "input", platform: "ovation" } },
+  { match: /OV_LOPR_Reference_Guide_for_Firms\.pdf$/i,
+    out: { doc_type: "ovation_guide", category: "input", platform: "ovation" } },
+
+  // ── DDS output guides ───────────────────────────────────────
   { match: /OV_DDS_Output_Overview_Guide\.pdf$/i,
     out: { doc_type: "ovation_guide", category: "dds_output", platform: "ovation" } },
-  { match: /OV_DDS_Market_Data_Output_Guide\.pdf$/i,
+  { match: /OV_DDS_Market_Data_Output(_Guide)?\.pdf$/i,
     out: { doc_type: "ovation_guide", category: "dds_output", platform: "ovation" } },
   { match: /OV_DDS_Collateral_Output_Guide\.pdf$/i,
     out: { doc_type: "ovation_guide", category: "dds_output", platform: "ovation" } },
@@ -43,58 +50,24 @@ const RULES: Array<{ match: RegExp; out: RuleOutput }> = [
     out: { doc_type: "ovation_guide", category: "dds_output", platform: "ovation" } },
   { match: /OV_DDS_RBH-CPM_Output_Guide\.pdf$/i,
     out: { doc_type: "ovation_guide", category: "dds_output", platform: "ovation" } },
-  { match: /OV_DDS_Stock-Loan_Output_Guide.*\.pdf$/i,
+  { match: /OV_DDS_Stock[-_]Loan_Output_Guide_MarketLoan(_Program)?(_\d+)?\.pdf$/i,
+    out: { doc_type: "ovation_guide", category: "dds_output", platform: "ovation" } },
+  { match: /OV_DDS_Stock[-_]Loan_Output_Guide_Hedge(_Program)?\.pdf$/i,
     out: { doc_type: "ovation_guide", category: "dds_output", platform: "ovation" } },
   { match: /OV_DDS_Delta_Position_Limits_Ref_Guide_CM\.pdf$/i,
     out: { doc_type: "ovation_guide", category: "dds_output", platform: "ovation" } },
   { match: /OV_DDS-FIXML_Futures_Message_Flow_Ref_Guide\.pdf$/i,
     out: { doc_type: "ovation_guide", category: "dds_output", platform: "ovation" } },
 
-  // ── Ovation inbound / submission guides ─────────────────────
-  { match: /OV_CSV_Input_Guide_for-Clearing_Members\.pdf$/i,
-    out: { doc_type: "ovation_guide", category: "input", platform: "ovation" } },
-  { match: /OV_LOPR_Reference_Guide_for_Firms\.pdf$/i,
-    out: { doc_type: "ovation_guide", category: "input", platform: "ovation" } },
-  { match: /Query_Ex_by_Ex_API_Guide\.pdf$/i,
-    out: { doc_type: "ovation_guide", category: "input", platform: "ovation" } },
+  // ── Connectivity ────────────────────────────────────────────
+  { match: /OV_DDS_Output_Connectivity_Setup_Guide\.pdf$/i,
+    out: { doc_type: "ovation_guide", category: "connectivity", platform: "ovation" } },
 
-  // ── FIXML schema hub pages ──────────────────────────────────
-  { match: /fixml-schema-definition-changes/i,
+  // ── FIXML schema zips (V2 ingest — stub rows in V1) ─────────
+  { match: /^FIXML\.zip$/i,
     out: { doc_type: "fixml_schema", category: "fixml_schema", platform: "ovation" } },
-  { match: /ovation-fixml-schema-5-0-definition-files/i,
+  { match: /^fixml-occ-main-5-0/i,
     out: { doc_type: "fixml_schema", category: "fixml_schema", platform: "ovation" } },
-
-  // ── Testing & connectivity ──────────────────────────────────
-  { match: /occ-ovation-external-testing-functionality\.pdf$/i,
-    out: { doc_type: "ovation_guide", category: "connectivity", platform: "ovation" } },
-  { match: /Ovation-External-Party-Testing-FAQ\.pdf$/i,
-    out: { doc_type: "ovation_guide", category: "testing", platform: "ovation" } },
-  { match: /Inbound_FIXML_Connectivity_Setup_Procedures\.pdf$/i,
-    out: { doc_type: "ovation_guide", category: "connectivity", platform: "ovation" } },
-  { match: /DDS_Recipient_Setup_Guide\.pdf$/i,
-    out: { doc_type: "ovation_guide", category: "connectivity", platform: "ovation" } },
-
-  // ── ENCORE legacy ───────────────────────────────────────────
-  { match: /ENCORE_DDS_Overview_Implementation\.pdf$/i,
-    out: { doc_type: "encore_guide", category: "reference", platform: "encore" } },
-  { match: /ENCORE_DDS_Guide_Delta_Position_Limits\.pdf$/i,
-    out: { doc_type: "encore_guide", category: "reference", platform: "encore" } },
-  { match: /ENCORE_OnDemand_Req_Dev_Ref_Guide\.pdf$/i,
-    out: { doc_type: "encore_guide", category: "reference", platform: "encore" } },
-  { match: /Inbound_FIXML_Developer_Ref_Prop_Transmission\.pdf$/i,
-    out: { doc_type: "encore_guide", category: "reference", platform: "encore" } },
-  { match: /Inbound_FIXML_CM_Ref_Delta_Position_Limits\.pdf$/i,
-    out: { doc_type: "encore_guide", category: "reference", platform: "encore" } },
-  { match: /inbound_cftc\.pdf$/i,
-    out: { doc_type: "record_layout", category: "reference", platform: "encore" } },
-  { match: /series-download-record-layout\.pdf$/i,
-    out: { doc_type: "record_layout", category: "reference", platform: "encore" } },
-  { match: /http-volume-contract-date-record-layout\.pdf$/i,
-    out: { doc_type: "record_layout", category: "reference", platform: "encore" } },
-  { match: /http-directory-record-layout\.pdf$/i,
-    out: { doc_type: "record_layout", category: "reference", platform: "encore" } },
-  { match: /flex-open-interest-record-layout\.pdf$/i,
-    out: { doc_type: "record_layout", category: "reference", platform: "encore" } },
 ];
 
 export function classifyByRule(doc: ParsedDoc): Classification | null {

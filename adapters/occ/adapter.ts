@@ -12,13 +12,13 @@ const occAdapter: Adapter = {
   corpus_id: "occ",
   label: "OCC Public Docs",
   description:
-    "31 public documents from theocc.com covering OCC's Ovation/ENCORE " +
-    "data layout transition: clearing and risk data layout summaries, " +
-    "DDS output guides, inbound submission guides, FIXML 4.4 / 5.0 schema " +
-    "hubs, testing and connectivity procedures, and the legacy ENCORE " +
-    "record layouts retained for reference until Ovation launch. Public " +
-    "sources only — no MyOCC content, no rulebook ingestion, no " +
-    "proprietary data.",
+    "18 public documents from theocc.com's Ovation Data Layouts & Schemas " +
+    "hub: two summary docs, the CSV + LOPR input guides, ten DDS output " +
+    "guides, the Output Connectivity setup guide, and FIXML 4.4 / 5.0 " +
+    "schema bundles. Public sources only — no MyOCC content, no rulebook " +
+    "ingestion, no proprietary data. ENCORE legacy manuals, testing & " +
+    "certification docs, and cloud-adoption whitepapers live on sibling " +
+    "pages and are V2 candidates.",
   sources: OCC_SOURCES,
   classify(doc: ParsedDoc): Promise<Classification> {
     return classifyOcc(doc);

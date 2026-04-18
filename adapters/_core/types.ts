@@ -5,7 +5,7 @@ export interface SourceSpec {
   url: string;
   local_filename: string;
   title: string;
-  doc_type: "pdf" | "html";
+  doc_type: "pdf" | "html" | "xlsx" | "zip";
   category: string;
   platform: string | null;
   classifier_hint: string;
@@ -23,7 +23,7 @@ export interface ParsedDoc {
   source_url: string;
   local_filename: string;
   title: string;
-  doc_type: "pdf" | "html";
+  doc_type: "pdf" | "html" | "xlsx" | "zip";
   raw_text: string;
   page_count?: number;
   content_hash: string;

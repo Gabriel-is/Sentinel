@@ -28,7 +28,15 @@ These are non-negotiable and shape the build.
   Corpus."
 - Subtitle: "Currently loaded: OCC public transformation docs (22 sources)."
 - Three canned example questions are framed as "Try these against the OCC
-  corpus:".
+  corpus:". V1 questions (answerable from the 18 Ovation data-layout docs):
+  1. "What's different between the Stock Loan Hedge Program output and
+     the Market Loan Program output?"  (exercises `sibling_of` edges)
+  2. "Where is Exercise by Exception documented in the DDS output guides,
+     and how does the Trades/Positions/E&A guide describe the flow?"
+     (exercises `references` edges across two docs)
+  3. "Which documents changed in the Layout Documentation Updates Summary
+     Ed. 1.9 (October 2025), and what output guides should I re-read?"
+     (exercises `supersedes` edges off the summary doc)
 - Footer text — **verbatim, no paraphrase, no relocation**:
 
   > Built from public OCC resources only. No MyOCC access, no insider data,
