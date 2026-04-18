@@ -134,7 +134,7 @@ export const OCC_SOURCES: SourceSpec[] = [
   },
   {
     url: "https://www.theocc.com/company-information/occ-transformation/data-layouts",
-    local_filename: "OV_DDS_Stock-Loan_Output_Guide_Hedge_Program.pdf",
+    local_filename: "OV_DDS_Stock_Loan_Output_Guide_Hedge_Program.pdf",
     title: "DDS Stock Loan Output Guide – Hedge Program (Ed. 1.0, November 2022)",
     doc_type: "pdf",
     category: "dds_output",
@@ -144,7 +144,7 @@ export const OCC_SOURCES: SourceSpec[] = [
   },
   {
     url: "https://www.theocc.com/getmedia/d72be0c6-6563-4cab-bb66-e935774b3207/OV_DDS_Stock-Loan_Output_Guide_MarketLoan_Program_1.pdf",
-    local_filename: "OV_DDS_Stock-Loan_Output_Guide_MarketLoan_Program_1.pdf",
+    local_filename: "OV_DDS_Stock-Loan_Output_Guide_MarketLoan_Program.pdf",
     title: "DDS Stock Loan Output Guide – Market Loan Program (Ed. 1.3, May 2025)",
     doc_type: "pdf",
     category: "dds_output",

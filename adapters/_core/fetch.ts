@@ -58,12 +58,17 @@ export async function readLocalCorpus(
   }
 
   // Surface extras (files on disk the adapter doesn't know about) to the
-  // ingest log. These are candidates for V2 additions to sources.ts.
+  // ingest log. Skip known support files (READMEs, reference docs).
   const expected = new Set(adapter.sources.map((s) => s.local_filename));
-  const extras = [...onDisk].filter((f) => !expected.has(f));
+  const isSupportFile = (f: string) =>
+    f.toLowerCase().endsWith(".md") ||
+    f.toLowerCase() === "readme";
+  const extras = [...onDisk].filter((f) =>
+    !expected.has(f) && !isSupportFile(f)
+  );
   if (extras.length) {
     console.log(
-      `[fetch] ${extras.length} extra file(s) on disk not in sources.ts:`,
+      `[fetch] ${extras.length} extra file(s) on disk not in sources.ts (candidates for V2):`,
     );
     for (const e of extras) console.log(`  - ${e}`);
   }
