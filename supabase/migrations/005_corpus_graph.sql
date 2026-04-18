@@ -62,6 +62,7 @@ CREATE TABLE sentinel_chunks (
   chunk_index       INTEGER NOT NULL,
   text              TEXT NOT NULL,
   token_count       INTEGER NOT NULL,
+  heading_path      TEXT[] DEFAULT '{}',        -- e.g. ['DDS Market Data Output', 'Full Derivative', 'Options']
   embedding         VECTOR(1536),               -- text-embedding-3-small
   metadata          JSONB DEFAULT '{}',
   UNIQUE (document_id, chunk_index)
@@ -69,7 +70,7 @@ CREATE TABLE sentinel_chunks (
 
 CREATE INDEX idx_chunks_document ON sentinel_chunks (document_id);
 CREATE INDEX idx_chunks_embedding ON sentinel_chunks
-  USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100);
+  USING hnsw (embedding vector_cosine_ops);
 CREATE INDEX idx_chunks_text_fts ON sentinel_chunks
   USING gin (to_tsvector('english', text));
 
@@ -82,7 +83,7 @@ CREATE TABLE sentinel_edges (
   source_chunk_id     UUID NOT NULL REFERENCES sentinel_chunks(id) ON DELETE CASCADE,
   target_document_id  UUID NOT NULL REFERENCES sentinel_documents(id) ON DELETE CASCADE,
   relation_type       TEXT NOT NULL,
-  -- cites | references | defines | supersedes | related
+  -- references | supersedes | sibling_of | encore_equivalent_of
   evidence_sentence   TEXT NOT NULL,            -- substring of source chunk text
   confidence          NUMERIC NOT NULL,
   extracted_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),

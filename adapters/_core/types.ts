@@ -44,6 +44,7 @@ export interface Chunk {
   chunk_index: number;
   text: string;
   token_count: number;
+  heading_path: string[];
   metadata: Record<string, unknown>;
 }
 
@@ -76,11 +77,10 @@ export interface Adapter {
 }
 
 export const RELATION_TYPES = [
-  "cites",
   "references",
-  "defines",
   "supersedes",
-  "related",
+  "sibling_of",
+  "encore_equivalent_of",
 ] as const;
 
 export type RelationType = typeof RELATION_TYPES[number];

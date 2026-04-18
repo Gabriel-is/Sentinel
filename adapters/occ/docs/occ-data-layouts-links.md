@@ -1,326 +1,175 @@
-# OCC Public Document Harvest — Seed Corpus
+# OCC — Data Layouts & Schemas — Download Links
 
-> **Provenance note:** Original harvest doc lost in chat handoff. This file
-> was rebuilt by Claude via web research on 2026-04-17. URL list verified
-> as publicly indexed via search-engine results on theocc.com — but every
-> candidate returns **HTTP 403 to automated fetch** (Deno, curl, WebFetch
-> all blocked by OCC's edge/WAF, even with a realistic Chrome User-Agent).
->
-> **Implication:** automated ingest from these URLs will not work from a
-> Supabase edge function or any datacenter IP. The pipeline must read from
-> a manually-seeded Supabase Storage bucket. The 22 URLs below remain valid
-> as **citation targets** for the dash page (a human browser can open them
-> fine), but the raw bytes need to be fetched from a residential connection
-> and uploaded once.
->
-> See `occ-context-graph-spec.md` §5.1 (revised) for the resulting ingest
-> shape.
+> **Provenance:** This is the user's verbatim harvest doc, recovered after
+> Claude's first reconstruction targeted the wrong corpus (governance /
+> annual reports). Source hub:
+> https://www.theocc.com/company-information/occ-transformation/data-layouts
 
-## Manual cache flow (revised primary path)
+The live page uses collapsible "Show More" sections and also points
+Clearing Members to MyOCC.com for some protected docs (Contrary Intentions
+output guide, Delta Position Limits output for Exchanges, ENCORE current
+layouts). The list below is every public-facing OCC-hosted document
+confirmed from this hub plus its children (FIXML 4.4 / 5.0 schema pages,
+Clearing/Risk Summary, connectivity, testing docs). Anything marked
+(MyOCC) is behind the member login and is **not** included in the seed
+corpus.
 
-1. From a residential connection, download each of the 22 URLs to local
-   disk, preserving the filename suffix at the end of the URL (the GUID-
-   prefixed `getmedia` and `getcontentasset` paths produce ugly filenames —
-   rename to the `local_filename` shown below for clarity).
-2. Upload to Supabase Storage:
-   `corpus-raw/occ/<local_filename>` (one bucket, flat layout).
-3. Run `deno task ingest occ` — `_core/run.ts` will read from
-   `corpus-raw/occ/`, parse, chunk, embed, persist. The `source_url` field
-   on each `sentinel_documents` row carries the original theocc.com URL
-   for citation rendering.
+**Total fetchable public seed: 31 URLs.** (The kickoff prompt's "22"
+estimate was approximate — the actual harvest count is 31.)
 
-## Categorization summary
+**Fetch reality:** OCC's web edge returns HTTP 403 to all automated
+fetches from datacenter IPs. URLs are publicly browseable from a
+residential connection. Ingest reads bytes from a manually-seeded
+Supabase Storage bucket (`corpus-raw/occ/`); URLs are citation targets
+only.
 
-| Category | Count | Notes |
-|---|---:|---|
-| `annual_report` | 3 | 2018, 2023, 2024 financials |
-| `risk_framework` | 4 | RMF, third-party RMF, R&WD plan, RMF landing page |
-| `governance` | 4 | Board + Governance & Nominating + Risk + Technology committee charters |
-| `technology` | 4 | Renaissance / cloud / Ovation platform — primary SDLC/QA-pitch material |
-| `pqd` | 2 | PFMI disclosures landing + narrative PDF |
-| `regulatory_filing` | 2 | Two SR-OCC rule change filings |
-| `strategic` | 3 | Executives, Board roster, Transformation hub |
-| **Total** | **22** | |
+---
 
-## URL list
+## 1. Summary / orientation (4)
 
-### Annual reports (3)
+- Ovation Platform – Clearing and Risk Data Layout Changes Summary
+  https://www.theocc.com/getmedia/08171c22-8d53-4dc6-a041-6e72e288b29a/OV_Clearing_Risk_Data_Layout_Changes_Summary.pdf
 
-```
-1. URL:           https://annualreport.theocc.com/getcontentasset/132d062a-e3b0-418c-b7b7-3337dec55adc/dfc3d011-8f63-43f6-9ed8-4b444333a1d0/occ-2024-financials.pdf
-   local_filename: occ-2024-financials.pdf
-   title:          OCC 2024 Financials
-   doc_type:       pdf
-   category:       annual_report
-   platform:       null
-   classifier_hint: occ[-_]?2024[-_]?financials\.pdf$
-   fetch_status:   403 (needs manual cache)
-   notes:          table-heavy financial statements; OCR not needed but text density is low in some pages
+- Ovation Platform – Changes and Enhancements for Clearing Members (Jan 2024)
+  https://www.theocc.com/getmedia/8e2487b2-a4e3-4bb1-947a-a52f39828f5f/Ovation-Platform-Changes-Enhancements_Clearing-Members_Jan2024.pdf
 
-2. URL:           https://annualreport.theocc.com/getcontentasset/5fa96c20-2ef0-4665-9264-586bd18387d7/dfc3d011-8f63-43f6-9ed8-4b444333a1d0/occ_2023_-financials_2-23-24_-final.pdf
-   local_filename: occ-2023-financials.pdf
-   title:          OCC 2023 Financials
-   doc_type:       pdf
-   category:       annual_report
-   platform:       null
-   classifier_hint: occ[-_]?2023[-_]?financials.*\.pdf$
-   fetch_status:   403
-   notes:          table-heavy
+- Ovation Platform – Changes and Enhancements for Trade Sources (Jan 2024)
+  https://www.theocc.com/getmedia/0db1ac5e-ca85-43b6-a109-4354a572d912/Ovation-Platform-Changes-and-Enhancements_Trade-Sources_Jan2024.pdf
 
-3. URL:           https://www.theocc.com/getattachment/f3f461e9-fd92-406e-a261-efd97ff6ff6f/occ-2018-annual-report.pdf
-   local_filename: occ-2018-annual-report.pdf
-   title:          OCC 2018 Annual Report
-   doc_type:       pdf
-   category:       annual_report
-   platform:       null
-   classifier_hint: occ-?\d{4}-annual-report\.pdf$
-   fetch_status:   403
-   notes:          legacy design narrative; useful for cross-year comparison
-```
+- Ovation Conversion FAQ (Nov 2022)
+  https://www.theocc.com/getmedia/0f1d3eaf-edd3-4ea4-99a4-155c8e620446/FINAL-Ovation_Conversion_FAQ-November-2022.pdf
 
-### Risk management framework (4)
+---
 
-```
-4. URL:           https://www.theocc.com/getmedia/3c9809d7-1671-4976-91da-121d21b47d53/Risk-Management-Framework.pdf
-   local_filename: risk-management-framework.pdf
-   title:          OCC Risk Management Framework
-   doc_type:       pdf
-   category:       risk_framework
-   platform:       null
-   classifier_hint: risk-management-framework\.pdf$
-   fetch_status:   403
-   notes:          canonical RMF doc
+## 2. Ovation DDS output guides (9 fetchable; 2 MyOCC)
 
-5. URL:           https://www.theocc.com/getcontentasset/68a1ea2d-ddae-4a93-a309-100bf70a0f28/dfc3d011-8f63-43f6-9ed8-4b444333a1d0/third-party-risk-management-framework.pdf
-   local_filename: third-party-risk-management-framework.pdf
-   title:          OCC Third-Party Risk Management Framework (eff. 2025-11-18)
-   doc_type:       pdf
-   category:       risk_framework
-   platform:       null
-   classifier_hint: third-party-risk-management-framework\.pdf$
-   fetch_status:   403
-   notes:          vendor-risk relevant; ties to SR 11-7 conversations
+- DDS Output Overview Guide
+  https://www.theocc.com/getmedia/7ddf6f7c-de6c-41a5-9473-57f5fbae7e55/OV_DDS_Output_Overview_Guide.pdf
 
-6. URL:           https://www.theocc.com/getmedia/e2cb031f-f53e-4c0b-981b-c3817bff79c9/GenUse_PartGuide_06182021.pdf
-   local_filename: rwd-participant-guide.pdf
-   title:          OCC Recovery and Orderly Wind-Down Plan Participant Guide
-   doc_type:       pdf
-   category:       risk_framework
-   platform:       null
-   classifier_hint: (GenUse_)?PartGuide.*\.pdf$
-   fetch_status:   403
-   notes:          public R&WD summary; DCO requirement
+- DDS Market Data Output Guide
+  https://www.theocc.com/getmedia/adb82faf-1b16-4ed0-a01f-be12cf2777f5/OV_DDS_Market_Data_Output_Guide.pdf
 
-7. URL:           https://www.theocc.com/risk-management/risk-management-framework
-   local_filename: risk-management-framework-landing.html
-   title:          OCC - Risk Management Framework (landing page)
-   doc_type:       html
-   category:       risk_framework
-   platform:       null
-   classifier_hint: /risk-management/risk-management-framework/?$
-   fetch_status:   403
-   notes:          narrative + 3-lines-of-defense diagram described inline
-```
+- DDS Collateral Output Guide
+  https://www.theocc.com/getmedia/7aa16792-da55-45ff-944b-4a6b9e4443d1/OV_DDS_Collateral_Output_Guide.pdf
 
-### Governance — board + committee charters (4)
+- DDS Trades, Positions, Exercise & Assignment Output Guide
+  https://www.theocc.com/getmedia/7e8375e5-c54d-4aed-a1b4-cef1c07fbb89/OV_DDS_Trades_Positions_E-A_Output_Guide.pdf
 
-```
-8. URL:           https://www.theocc.com/getmedia/99ed48a4-aa44-45ac-8dee-9399b479a1c8/board_of_directors_charter.pdf
-   local_filename: board-of-directors-charter.pdf
-   title:          Board of Directors Charter and Corporate Governance Principles
-   doc_type:       pdf
-   category:       governance
-   platform:       null
-   classifier_hint: board_of_directors_charter\.pdf$
-   fetch_status:   403
-   notes:          governance backbone
+- DDS On-Demand Positions Guide
+  https://www.theocc.com/getmedia/eab72bd1-1beb-4c11-80b0-c191b25a3428/OV_DDS_OnDemand_Positions_Guide.pdf
 
-9. URL:           https://www.theocc.com/getmedia/483ac739-0d43-46d2-a1ca-7ed38094975c/governance_nominating_charter.pdf
-   local_filename: governance-nominating-committee-charter.pdf
-   title:          Governance and Nominating Committee Charter
-   doc_type:       pdf
-   category:       governance
-   platform:       null
-   classifier_hint: governance_nominating_charter\.pdf$
-   fetch_status:   403
-   notes:
+- DDS RBH / CPM Output Guide
+  https://www.theocc.com/getmedia/9b593a2e-effd-4ff3-845e-addb48b2a033/OV_DDS_RBH-CPM_Output_Guide.pdf
 
-10. URL:           https://www.theocc.com/getmedia/e71a4c1d-52dc-4c95-aeb1-98dab9159f41/risk_committee_charter.pdf
-    local_filename: risk-committee-charter.pdf
-    title:          Risk Committee Charter
-    doc_type:       pdf
-    category:       governance
-    platform:       null
-    classifier_hint: risk_committee_charter\.pdf$
-    fetch_status:   403
-    notes:          maps to AI RMF GOVERN function — strong cross-link target
+- DDS Stock Loan Output Guide (Market Loan Program)
+  https://www.theocc.com/getmedia/d72be0c6-6563-4cab-bb66-e935774b3207/OV_DDS_Stock-Loan_Output_Guide_MarketLoan_Program_1.pdf
 
-11. URL:           https://www.theocc.com/getmedia/aa0b642e-9032-4723-b819-26548d50e667/technology_committee_charter.pdf
-    local_filename: technology-committee-charter.pdf
-    title:          Technology Committee Charter
-    doc_type:       pdf
-    category:       governance
-    platform:       null
-    classifier_hint: technology_committee_charter\.pdf$
-    fetch_status:   403
-    notes:          KEY DOC for QA/SDLC pitch — board-level tech oversight
-```
+- DDS Delta Position Limits Reference Guide for Clearing Members
+  https://www.theocc.com/getmedia/91c74b19-4b44-4c95-b8e5-2753c1bd53dd/OV_DDS_Delta_Position_Limits_Ref_Guide_CM.pdf
 
-### Technology — Renaissance / cloud transformation / platform (4)
+- DDS / FIXML Futures Message Flow Reference Guide
+  https://www.theocc.com/getmedia/06cced4d-001b-452c-9b76-28b064dba355/OV_DDS-FIXML_Futures_Message_Flow_Ref_Guide.pdf
 
-```
-12. URL:           https://www.theocc.com/newsroom/views/2023/05-25-occs-renaissance-initiative-heralds-a-new-era-in-cloud-native-fintech
-    local_filename: renaissance-cloud-native-fintech.html
-    title:          OCC's Renaissance Initiative Heralds a New Era in Cloud-Native Fintech
-    doc_type:       html
-    category:       technology
-    platform:       aws
-    classifier_hint: occs-renaissance-initiative.*cloud-native-fintech
-    fetch_status:   403
-    notes:          cloud-native narrative; cites AWS
+- DDS Contrary Intentions Output Guide — (MyOCC, excluded)
+- DDS Delta Position Limits Output Guide for Exchanges — (MyOCC, excluded)
 
-13. URL:           https://www.theocc.com/Newsroom/Insights/2019/11-26-OCC-Moving-Clearing-Data-and-Risk-Applicatio
-    local_filename: clearing-data-risk-cloud-migration.html
-    title:          OCC Moving Clearing Data and Risk Applications to the Cloud
-    doc_type:       html
-    category:       technology
-    platform:       aws
-    classifier_hint: 11-26-OCC-Moving-Clearing-Data-and-Risk-Applicatio
-    fetch_status:   403
-    notes:          cloud migration scope detail
+---
 
-14. URL:           https://www.theocc.com/company-information/occ-transformation/proposed-path-to-cloud-adoption
-    local_filename: proposed-path-to-cloud-adoption.html
-    title:          OCC - Proposed Path to Cloud Adoption
-    doc_type:       html
-    category:       technology
-    platform:       aws
-    classifier_hint: /occ-transformation/proposed-path-to-cloud-adoption/?$
-    fetch_status:   403
-    notes:          SEC no-objection context
+## 3. Ovation inbound / submission guides (3)
 
-15. URL:           https://www.theocc.com/getcontentasset/0db1ac5e-ca85-43b6-a109-4354a572d912/dfc3d011-8f63-43f6-9ed8-4b444333a1d0/ovation-platform-changes-and-enhancements_trade-sources_jan2024.pdf
-    local_filename: ovation-platform-changes-jan2024.pdf
-    title:          Ovation Platform Changes and Enhancements for Trade Sources (Jan 2024)
-    doc_type:       pdf
-    category:       technology
-    platform:       aws
-    classifier_hint: ovation-platform-changes-and-enhancements.*\.pdf$
-    fetch_status:   403
-    notes:          KEY DOC for QA/SDLC pitch — release-management surface
-```
+- CSV Input Guide for Clearing Members
+  https://www.theocc.com/getmedia/2e5c9d6f-6080-4333-9694-178ad4c04940/OV_CSV_Input_Guide_for-Clearing_Members.pdf
 
-### Public Quantitative Disclosures / PFMI (2)
+- LOPR Reference Guide for Firms
+  https://www.theocc.com/getmedia/ce237a7a-ebdc-480a-894e-a79e9d4098e5/OV_LOPR_Reference_Guide_for_Firms.pdf
 
-```
-16. URL:           https://www.theocc.com/risk-management/pfmi-disclosures
-    local_filename: pfmi-disclosures-landing.html
-    title:          OCC - PFMI Disclosures (landing page)
-    doc_type:       html
-    category:       pqd
-    platform:       null
-    classifier_hint: /risk-management/pfmi-disclosures/?$
-    fetch_status:   403
-    notes:          index of quarterly PQDs
+- Query Exercise by Exception API Guide
+  https://www.theocc.com/getmedia/c4c6b680-2073-4386-b9ec-e9fe4cb5e6ed/Query_Ex_by_Ex_API_Guide.pdf
 
-17. URL:           https://www.theocc.com/getmedia/4664dece-7172-42a5-8f55-5982f358b696/pfmi-disclosures.pdf
-    local_filename: pfmi-disclosures-narrative.pdf
-    title:          OCC Disclosure Framework for Financial Market Infrastructures (PFMI narrative)
-    doc_type:       pdf
-    category:       pqd
-    platform:       null
-    classifier_hint: pfmi-disclosures\.pdf$
-    fetch_status:   403
-    notes:          narrative companion to quarterly quantitative file
-```
+---
 
-### Regulatory filings (2)
+## 4. FIXML schema definition files (2 hub pages)
 
-```
-18. URL:           https://www.theocc.com/getmedia/d62230fa-018d-4472-9a48-05152029b997/sr_occ_2024_016.pdf
-    local_filename: sr-occ-2024-016.pdf
-    title:          SR-OCC-2024-016 Proposed Rule Change Filing
-    doc_type:       pdf
-    category:       regulatory_filing
-    platform:       null
-    classifier_hint: sr[_-]occ[_-]\d{4}[_-]\d{3}\.pdf$
-    fetch_status:   403
-    notes:          canonical 19b-4-style filing
+- FIXML 4.4 Definition Files
+  https://www.theocc.com/company-information/occ-transformation/data-layouts/fixml-schema-definition-changes
+- FIXML 5.0 Definition Files (Stock Loan uses 5.0)
+  https://www.theocc.com/company-information/occ-transformation/data-layouts/ovation-fixml-schema-5-0-definition-files
 
-19. URL:           https://www.theocc.com/getmedia/88a24549-3a86-458f-9231-d0b072608c63/SR-OCC-2024-002.pdf
-    local_filename: sr-occ-2024-002.pdf
-    title:          SR-OCC-2024-002 Proposed Rule Change (T+1 conforming changes)
-    doc_type:       pdf
-    category:       regulatory_filing
-    platform:       null
-    classifier_hint: SR-OCC-\d{4}-\d{3}\.pdf$
-    fetch_status:   403
-    notes:
-```
+Note: individual .xsd files are linked from those two pages. They're
+served from the same /getmedia/ pattern but the page-level URLs above are
+the entry points. ~40 XSDs across the two versions; out of scope for V1
+(see V2 candidates below).
 
-### Strategic — about / leadership (3)
+---
 
-```
-20. URL:           https://www.theocc.com/company-information/executives
-    local_filename: executives.html
-    title:          OCC - Executives
-    doc_type:       html
-    category:       strategic
-    platform:       null
-    classifier_hint: /company-information/executives/?$
-    fetch_status:   403
-    notes:          org chart source — useful entity-extraction target
+## 5. Testing & connectivity (4)
 
-21. URL:           https://www.theocc.com/company-information/board-of-directors
-    local_filename: board-of-directors.html
-    title:          OCC - Board of Directors
-    doc_type:       html
-    category:       strategic
-    platform:       null
-    classifier_hint: /company-information/board-of-directors/?$
-    fetch_status:   403
-    notes:          board roster
+- Ovation External Testing Functionality
+  https://www.theocc.com/getContentAsset/b47e9ef6-1f14-4705-99af-1ac05f084e07/dfc3d011-8f63-43f6-9ed8-4b444333a1d0/occ-ovation-external-testing-functionality.pdf
 
-22. URL:           https://www.theocc.com/occ-transformation
-    local_filename: occ-transformation-hub.html
-    title:          OCC Transformation (Renaissance program landing)
-    doc_type:       html
-    category:       strategic
-    platform:       aws
-    classifier_hint: /occ-transformation/?$
-    fetch_status:   403
-    notes:          Renaissance program hub; ties governance to technology
-```
+- Ovation External Party Testing FAQ
+  https://www.theocc.com/getmedia/39081af3-f104-4efe-bf07-f6013f444932/Ovation-External-Party-Testing-FAQ.pdf
 
-## What got dropped from the 26-URL candidate set
+- Inbound FIXML Connectivity Setup Procedures
+  https://www.theocc.com/getmedia/408f921d-abbb-4ddb-aae9-ddf94f0e4815/Inbound_FIXML_Connectivity_Setup_Procedures.pdf
 
-- 2 archive index pages (annual-reports index, board-charters index) — link-mining targets, not corpus material. Better to ingest the leaf docs directly.
-- 1 2019 Renaissance press release — superseded by the 2023 cloud-native-fintech narrative (#12) and the transformation hub (#22).
-- 1 2023 SEC RIN cybersecurity comment letter — interesting but tangential to the SDLC/QA pitch; can add in V2 if relation-extraction needs more cyber surface area.
+- DDS Recipient Setup Guide (Real-Time MQ & Batch Pull)
+  https://www.theocc.com/getmedia/ec5a2069-f272-48b6-a1ca-92af0afbb5fc/DDS_Recipient_Setup_Guide.pdf
 
-## MyOCC verification
+---
 
-Zero URLs in this list contain `myocc`. A unit test in `adapters/occ/`
-should assert this and fail the build if violated.
+## 6. Current ENCORE layouts (linked from hub for reference until Ovation launch) (9)
 
-## V2 candidates (not in seed)
+- ENCORE DDS Guide – Overview / Implementation
+  https://www.theocc.com/getmedia/edaac932-1d30-4c31-899d-e06a5ebaf591/ENCORE_DDS_Overview_Implementation.pdf
 
-- The two index pages above (treated as scrapers, not corpus docs).
-- Renaissance 2019 press release.
-- 2023 cyber comment letter.
-- Quarterly PQD spreadsheets (XLSX parser needed).
-- Older annual reports (2017 and prior) for trend analysis.
-- OCC RAFM / margin methodology white papers if findable on theocc.com.
+- ENCORE DDS Guide – Delta Position Limits
+  https://www.theocc.com/getmedia/63b34fce-8b84-4161-80d6-7381013cbf2d/ENCORE_DDS_Guide_Delta_Position_Limits.pdf
 
-## Open data questions for ratification
+- ENCORE On-Demand Request Developer Reference Guide
+  https://www.theocc.com/getmedia/75e7ebed-2e5c-4682-8a68-075fba49f884/ENCORE_OnDemand_Req_Dev_Ref_Guide.pdf
 
-1. Are 3 annual reports enough, or should we shift one slot to a 4th annual
-   report (e.g. 2022) to make year-over-year edges more interesting?
-2. The two index pages were dropped — do you want them in for category-page
-   citations from the dash page?
-3. Comment letter (#23 from candidate set) — include in V1 for cyber
-   posture, or defer?
-4. Manual cache — do you want me to wire the pipeline to also accept a
-   pre-prepared local folder (e.g. `data/sources/occ/`) so caching is
-   filesystem-based instead of Supabase Storage upload? Faster local dev,
-   slower production. Or both paths?
+- ENCORE Inbound FIXML Developer Reference Guide – Proprietary Transmissions
+  https://www.theocc.com/getmedia/3d4c9aff-4856-4e46-b624-8f6a31c1330a/Inbound_FIXML_Developer_Ref_Prop_Transmission.pdf
+
+- Inbound FIXML CM Reference – Delta Position Limits
+  https://www.theocc.com/getmedia/aec621a2-359f-429a-9f12-ab6ba9c3fc29/Inbound_FIXML_CM_Ref_Delta_Position_Limits.pdf
+
+- Inbound CFTC Large Trader Record Layout
+  https://www.theocc.com/getmedia/48345da6-b86d-452f-9020-0ce907021a09/inbound_cftc.pdf
+
+- Series Download Record Layout
+  https://www.theocc.com/getmedia/b192b56e-58e5-486d-a67f-b6f6e787dc50/series-download-record-layout.pdf
+
+- HTTP Volume Download with Contract Date Record Layout
+  https://www.theocc.com/getmedia/83ff9e6c-5c5d-4e34-be7a-3085df49499d/http-volume-contract-date-record-layout.pdf
+
+- HTTP Directory of Listed Products Record Layout
+  https://www.theocc.com/getmedia/a140e253-8f38-451f-ab0d-f90110443109/http-directory-record-layout.pdf
+
+- Flex Open Interest Record Layout
+  https://www.theocc.com/getmedia/c4bbef04-3062-46d5-865c-2361036e8c99/flex-open-interest-record-layout.pdf
+
+---
+
+## Gaps / caveats for Chris
+
+1. OCC's web edge blocks automated fetches (403). Can't confirm 100% of
+   the "Show More" expansions from the outside. These links are every
+   public-facing doc surfaced via Google's index of the hub + its child
+   pages + the Oct 2024 InfoMemo #55385 link bundle.
+
+2. Anything tagged (MyOCC) lives behind the member portal — public hub
+   shows the title but the file isn't publicly served. Contrary
+   Intentions output, Delta Position Limits exchange output, and
+   "current ENCORE manuals and user guides" all route there.
+
+3. FIXML 4.4 and 5.0 each have ~40 individual .xsd files linked off
+   their respective hub pages. The two hub URLs are seeded; the ~80
+   leaf XSDs are V2 (ingest XSDs as a structured doc_type with the
+   same chunk/embed pipeline, or render them as nodes in the graph
+   without chunking).
+
+4. Testing was paused June 2025; OCC said in the 04/17/2026 version of
+   the Testing page that Ovation testing reopens Q2 2026. Worth a
+   sanity-check before kicking anything off.
